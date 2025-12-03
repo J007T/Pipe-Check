@@ -1,0 +1,3765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>PurposeMobile Tools - Unified Field Calculator</title>
+    <meta name="description" content="Professional construction calculator for field use - Pipe Level Check, Laser, Regrade & Grade Check tools">
+    <meta name="theme-color" content="#006699">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Field Tools">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Unified Light Theme - Optimized for sunny field conditions */
+            --primary: #006699;
+            --primary-dark: #004d73;
+            --primary-light: #4dabf7;
+            --secondary: #28a745;
+            --secondary-dark: #1e7e34;
+            --danger: #dc3545;
+            --danger-dark: #bd2130;
+            --warning: #ffc107;
+            --warning-dark: #d39e00;
+            --info: #17a2b8;
+            --info-dark: #138496;
+            --success: #28a745;
+            --success-dark: #1e7e34;
+            
+            /* Light Theme UI Colors */
+            --bg-body: #f8f9fa;
+            --bg-app: #ffffff;
+            --bg-card: #ffffff;
+            --bg-input: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --text-muted: #868e96;
+            --border: #dee2e6;
+            --border-light: #e9ecef;
+            --shadow: 0 2px 12px rgba(0,0,0,0.12);
+            --shadow-light: 0 1px 4px rgba(0,0,0,0.08);
+            
+            /* Functional Colors */
+            --pipelevelcheck: #e74c3c;
+            --laser: #17a2b8;
+            --regrade: #e67e22;
+            --gradecheck: #28a745;
+            --chainageil: #9b59b6;
+            --generalnotes: #17a2b8;
+            
+            /* Status Colors */
+            --status-high: #e74c3c;
+            --status-low: #3498db;
+            --status-level: #2ecc71;
+            
+            /* Constants */
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: all 0.15s ease;
+        }
+
+        [data-theme="dark"] {
+            /* Unified Dark Theme - Optimized for low-light field conditions */
+            --primary: #4dabf7;
+            --primary-dark: #339af0;
+            --primary-light: #74c0fc;
+            --secondary: #51cf66;
+            --secondary-dark: #40c057;
+            --danger: #ff6b6b;
+            --danger-dark: #fa5252;
+            --warning: #ffd43b;
+            --warning-dark: #fcc419;
+            --info: #3bc9db;
+            --info-dark: #22b8cf;
+            --success: #51cf66;
+            --success-dark: #40c057;
+            
+            /* Dark Theme UI Colors */
+            --bg-body: #121212;
+            --bg-app: #1e1e1e;
+            --bg-card: #2d2d2d;
+            --bg-input: #2d2d2d;
+            --text-primary: #e9ecef;
+            --text-secondary: #adb5bd;
+            --text-muted: #6c757d;
+            --border: #495057;
+            --border-light: #3a3a3a;
+            --shadow: 0 2px 12px rgba(0,0,0,0.4);
+            --shadow-light: 0 1px 4px rgba(0,0,0,0.3);
+            
+            /* Functional Colors */
+            --pipelevelcheck: #ff6b6b;
+            --laser: #3bc9db;
+            --regrade: #ff922b;
+            --gradecheck: #51cf66;
+            --chainageil: #bb86fc;
+            --generalnotes: #3bc9db;
+            
+            /* Status Colors */
+            --status-high: #ff6b6b;
+            --status-low: #74c0fc;
+            --status-level: #51cf66;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            touch-action: manipulation;
+            line-height: 1.6;
+            font-size: 15px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .app {
+            max-width: 428px;
+            margin: 0 auto;
+            background: var(--bg-app);
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        [data-theme="dark"] .app {
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
+
+        /* Unified Header */
+        .unified-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px 20px 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .unified-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        .unified-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .unified-header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .project-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .project-input {
+            padding: 10px 12px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.12);
+            color: white;
+            font-size: 0.9rem;
+            transition: var(--transition-fast);
+            font-weight: 500;
+        }
+
+        .project-input:focus {
+            outline: none;
+            border-color: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.18);
+        }
+
+        .project-input::placeholder {
+            color: rgba(255,255,255,0.7);
+            font-weight: 400;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.08);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            background: var(--bg-card);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-light);
+        }
+
+        .tab-btn {
+            padding: 16px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--bg-app);
+        }
+
+        .tab-btn:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 0;
+        }
+
+        /* Section Headers - All Collapsed by Default */
+        .section-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 20px;
+            margin: 0;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        .section-header i {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .section-header .chevron {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .section-header.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: var(--bg-app);
+        }
+
+        .section-content.collapsed {
+            max-height: 0 !important;
+        }
+
+        .section-inner {
+            padding: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .label-icon {
+            color: var(--primary);
+            margin-right: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            transition: var(--transition-fast);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-app);
+            box-shadow: 0 0 0 3px rgba(0, 102, 153, 0.1);
+        }
+
+        [data-theme="dark"] input:focus,
+        [data-theme="dark"] select:focus,
+        [data-theme="dark"] textarea:focus {
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        /* Reading Cards */
+        .reading-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .reading-card:hover {
+            box-shadow: var(--shadow);
+        }
+
+        .reading-card.collapsed .reading-card-content {
+            display: none;
+        }
+
+        .reading-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 18px;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition-fast);
+            background: var(--bg-input);
+        }
+
+        .reading-card-header:hover {
+            background: var(--border-light);
+        }
+
+        .reading-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reading-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .control-btn {
+            background: var(--bg-app);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-size: 0.85rem;
+        }
+
+        .control-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .control-btn:disabled:hover {
+            background: var(--bg-app);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        .delete-reading {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-fast);
+        }
+
+        .delete-reading:hover {
+            background: var(--danger-dark);
+            transform: scale(1.05);
+        }
+
+        .delete-reading:active {
+            transform: scale(0.95);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            font-family: inherit;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; 
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 153, 0.3);
+        }
+
+        .btn-secondary { 
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white; 
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--secondary-dark), var(--secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-danger { 
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            color: white; 
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, var(--danger-dark), var(--danger));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-warning { 
+            background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+            color: var(--text-primary);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, var(--warning-dark), var(--warning));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        }
+
+        /* Result Displays */
+        .result-display {
+            background: linear-gradient(135deg, var(--bg-input), var(--bg-card));
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 16px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+            box-shadow: var(--shadow-light);
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .result-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-high {
+            background: linear-gradient(135deg, var(--status-high), #c0392b);
+            color: white;
+        }
+
+        .status-low {
+            background: linear-gradient(135deg, var(--status-low), #2980b9);
+            color: white;
+        }
+
+        .status-level {
+            background: linear-gradient(135deg, var(--status-level), #27ae60);
+            color: white;
+        }
+
+        /* Preview Section */
+        .preview-container {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 16px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .preview-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            resize: vertical;
+            transition: var(--transition-fast);
+        }
+
+        .preview-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 153, 0.1);
+        }
+
+        .format-warning {
+            background: var(--warning);
+            border: 1px solid var(--warning-dark);
+            color: var(--text-primary);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            margin-top: 12px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .format-warning.hidden {
+            display: none;
+        }
+
+        /* Reference Tables */
+        .reference-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            margin-top: 20px;
+            box-shadow: var(--shadow-light);
+            overflow: hidden;
+        }
+
+        .reference-header {
+            background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+            color: var(--text-primary);
+            padding: 14px 18px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+        }
+
+        .reference-header:hover {
+            background: linear-gradient(135deg, var(--warning-dark), var(--warning));
+        }
+
+        .reference-header .chevron {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .reference-header.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        .reference-content {
+            padding: 18px;
+            transition: max-height 0.3s ease;
+        }
+
+        .reference-content.collapsed {
+            display: none;
+        }
+
+        .reference-table h3 {
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            box-shadow: var(--shadow-light);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .grade-table th,
+        .grade-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .grade-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .grade-table tr:nth-child(even) {
+            background: var(--bg-input);
+        }
+
+        .grade-table td {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Mode Toggles */
+        .mode-toggle {
+            display: flex;
+            background: var(--bg-input);
+            border-radius: var(--radius-sm);
+            padding: 4px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        /* Radio Toggle */
+        .radio-toggle {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        /* Converter Text */
+        .converter-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            padding: 8px 10px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            border-left: 3px solid var(--info);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        .formula-display {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--info);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        .formula-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .formula-step {
+            margin: 2px 0;
+            padding-left: 8px;
+        }
+
+        /* Extra Distance Section */
+        .extra-distance-section {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            border-left: 3px solid var(--warning);
+        }
+
+        .extra-distance-section.hidden {
+            display: none;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--success);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+            color: var(--text-primary);
+        }
+
+        .notification i {
+            font-size: 1.1rem;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+
+        /* Clear Tool Buttons */
+        .clear-tool-btn {
+            width: 100%;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Action Buttons Grid */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        /* Tool-specific accents */
+        .pipelevelcheck-tool .reading-card {
+            border-left: 4px solid var(--pipelevelcheck);
+        }
+
+        .laser-tool .reading-card {
+            border-left: 4px solid var(--laser);
+        }
+
+        .regrade-tool .reading-card {
+            border-left: 4px solid var(--regrade);
+        }
+
+        .gradecheck-tool .reading-card {
+            border-left: 4px solid var(--gradecheck);
+        }
+
+        .chainageil-tool .reading-card {
+            border-left: 4px solid var(--chainageil);
+        }
+
+        .generalnotes-tool .reading-card {
+            border-left: 4px solid var(--generalnotes);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-info {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .tab-btn {
+                font-size: 0.8rem;
+                padding: 14px 8px;
+            }
+
+            .tab-btn i {
+                display: none;
+            }
+
+            .reading-controls {
+                gap: 4px;
+            }
+
+            .control-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .section-inner {
+                padding: 16px;
+            }
+
+            .unified-header {
+                padding: 18px 16px 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .reading-controls {
+                flex-direction: column;
+            }
+            
+            .control-btn {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Hide elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Loading animation */
+        .calculating {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculating::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* High contrast focus for accessibility */
+        @media (prefers-contrast: high) {
+            input:focus, select:focus, textarea:focus {
+                border-width: 3px;
+            }
+            
+            .btn {
+                border: 2px solid currentColor;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Unified Header -->
+        <header class="unified-header">
+            <h1><i class="fas fa-calculator"></i> Field Tools</h1>
+            <p class="subtitle">Pipe Level Check • Laser • Regrade • Grade Check • Chainage IL • Notes</p>
+            
+            <div class="header-controls">
+                <div class="project-info">
+                    <input type="text" class="project-input" id="unifiedProjectName" placeholder="Project Name">
+                    <input type="text" class="project-input" id="unifiedStage" placeholder="Stage">
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="pipelevelcheck">
+                <i class="fas fa-ruler-combined"></i>
+                <span>Pipe Level</span>
+            </button>
+            <button class="tab-btn" data-tab="laser">
+                <i class="fas fa-bullseye"></i>
+                <span>Laser</span>
+            </button>
+            <button class="tab-btn" data-tab="regrade">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Regrade</span>
+            </button>
+            <button class="tab-btn" data-tab="gradecheck">
+                <i class="fas fa-check-double"></i>
+                <span>Grade Check</span>
+            </button>
+            <button class="tab-btn" data-tab="chainageil">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Chainage IL</span>
+            </button>
+            <button class="tab-btn" data-tab="generalnotes">
+                <i class="fas fa-sticky-note"></i>
+                <span>Notes</span>
+            </button>
+        </nav>
+
+        <!-- Pipe Level Check Tab -->
+        <div id="pipelevelcheck-tab" class="tab-content active pipelevelcheck-tool">
+            <div class="main-content">
+                <!-- Pipe Level Check Calculations Section - Collapsed by Default -->
+                <div class="section-header collapsed" onclick="toggleSection('pipeLevelCheckSection', event)">
+                    <i class="fas fa-ruler-combined"></i>
+                    <span>Pipe Level Check Calculations</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="section-content collapsed" id="pipeLevelCheckSection">
+                    <div class="section-inner">
+                        <div id="pipeLevelCheckReadingsContainer"></div>
+                        
+                        <button class="btn btn-primary" id="addPipeLevelCheckReadingBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Pipe Level Check
+                        </button>
+
+                        <button class="btn btn-warning clear-tool-btn" onclick="clearPipeLevelCheckToolData()">
+                            <i class="fas fa-broom"></i>
+                            Clear Pipe Level Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Guide Grade Table -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('pipeLevelGradeTable')">
+                        <i class="fas fa-table"></i>
+                        <span>Quick Guide Grade Table</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="pipeLevelGradeTable">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Ratio</th>
+                                    <th>%</th>
+                                    <th>1m Rise</th>
+                                    <th>6m Rise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1:40</td><td>2.500</td><td>25mm</td><td>150mm</td></tr>
+                                <tr><td>1:45</td><td>2.222</td><td>22mm</td><td>133mm</td></tr>
+                                <tr><td>1:50</td><td>2.000</td><td>20mm</td><td>120mm</td></tr>
+                                <tr><td>1:55</td><td>1.818</td><td>18mm</td><td>109mm</td></tr>
+                                <tr><td>1:60</td><td>1.667</td><td>17mm</td><td>100mm</td></tr>
+                                <tr><td>1:65</td><td>1.538</td><td>15mm</td><td>92mm</td></tr>
+                                <tr><td>1:70</td><td>1.429</td><td>14mm</td><td>86mm</td></tr>
+                                <tr><td>1:75</td><td>1.333</td><td>13mm</td><td>80mm</td></tr>
+                                <tr><td>1:80</td><td>1.250</td><td>13mm</td><td>75mm</td></tr>
+                                <tr><td>1:85</td><td>1.176</td><td>12mm</td><td>71mm</td></tr>
+                                <tr><td>1:90</td><td>1.111</td><td>11mm</td><td>67mm</td></tr>
+                                <tr><td>1:95</td><td>1.053</td><td>11mm</td><td>63mm</td></tr>
+                                <tr><td>1:100</td><td>1.000</td><td>10mm</td><td>60mm</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Valuations Section -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('pipeLevelValuations')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tool Valuations - Pipe Level Check</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="pipeLevelValuations">
+                        <div class="formula-display">
+                            <div class="formula-title">Pipe Level Check Purpose:</div>
+                            <div class="formula-step">• Verify pipe installation against design levels</div>
+                            <div class="formula-step">• Calculate HIGH/LOW deviations from design</div>
+                            <div class="formula-step">• Essential for quality control and compliance</div>
+                            <br>
+                            <div class="formula-title">Field Applications:</div>
+                            <div class="formula-step">• Daily pipe installation checks</div>
+                            <div class="formula-step">• Progress verification against design</div>
+                            <div class="formula-step">• Construction quality documentation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Laser Converter Tab -->
+        <div id="laser-tab" class="tab-content laser-tool">
+            <div class="main-content">
+                <!-- Laser Conversions Section - Collapsed by Default -->
+                <div class="section-header collapsed" onclick="toggleSection('laserConversionsSection', event)">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Laser Grade Conversions</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="section-content collapsed" id="laserConversionsSection">
+                    <div class="section-inner">
+                        <div id="laserReadingsContainer"></div>
+                        
+                        <button class="btn btn-primary" id="addLaserReadingBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Conversion
+                        </button>
+
+                        <button class="btn btn-warning clear-tool-btn" onclick="clearLaserToolData()">
+                            <i class="fas fa-broom"></i>
+                            Clear Laser Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reference Table - Collapsed by Default -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('laserReference')">
+                        <i class="fas fa-table"></i>
+                        <span>Grade Reference Table</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="laserReference">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Ratio</th>
+                                    <th>Laser %</th>
+                                    <th>1m Rise</th>
+                                    <th>6m Rise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1:40</td><td>2.5000</td><td>25mm</td><td>150mm</td></tr>
+                                <tr><td>1:45</td><td>2.2222</td><td>22mm</td><td>133mm</td></tr>
+                                <tr><td>1:50</td><td>2.0000</td><td>20mm</td><td>120mm</td></tr>
+                                <tr><td>1:60</td><td>1.6667</td><td>17mm</td><td>100mm</td></tr>
+                                <tr><td>1:70</td><td>1.4286</td><td>14mm</td><td>86mm</td></tr>
+                                <tr><td>1:80</td><td>1.2500</td><td>13mm</td><td>75mm</td></tr>
+                                <tr><td>1:90</td><td>1.1111</td><td>11mm</td><td>67mm</td></tr>
+                                <tr><td>1:100</td><td>1.0000</td><td>10mm</td><td>60mm</td></tr>
+                                <tr><td>1:120</td><td>0.8333</td><td>8mm</td><td>50mm</td></tr>
+                                <tr><td>1:150</td><td>0.6667</td><td>7mm</td><td>40mm</td></tr>
+                                <tr><td>1:200</td><td>0.5000</td><td>5mm</td><td>30mm</td></tr>
+                                <tr><td>1:300</td><td>0.3333</td><td>3mm</td><td>20mm</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Valuations Section -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('laserValuations')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tool Valuations - Laser Converter</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="laserValuations">
+                        <div class="formula-display">
+                            <div class="formula-title">Laser Converter Purpose:</div>
+                            <div class="formula-step">• Convert between grade ratios and laser percentages</div>
+                            <div class="formula-step">• Essential for laser level setup and verification</div>
+                            <div class="formula-step">• Maintain accuracy in grade establishment</div>
+                            <br>
+                            <div class="formula-title">Field Applications:</div>
+                            <div class="formula-step">• Laser level setup and calibration</div>
+                            <div class="formula-step">• Grade verification during construction</div>
+                            <div class="formula-step">• Design to field implementation conversion</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Regrade Tool Tab -->
+        <div id="regrade-tab" class="tab-content regrade-tool">
+            <div class="main-content">
+                <!-- Regrade Calculations Section - Collapsed by Default -->
+                <div class="section-header collapsed" onclick="toggleSection('regradeCalculationsSection', event)">
+                    <i class="fas fa-calculator"></i>
+                    <span>Regrade Calculations</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="section-content collapsed" id="regradeCalculationsSection">
+                    <div class="section-inner">
+                        <div id="regradeReadingsContainer"></div>
+
+                        <button class="btn btn-primary" id="addRegradeReadingBtn">
+                            <i class="fas fa-plus-circle"></i>
+                            Add Regrade Calculation
+                        </button>
+
+                        <button class="btn btn-warning clear-tool-btn" onclick="clearRegradeToolData()">
+                            <i class="fas fa-broom"></i>
+                            Clear Regrade Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Guide Grade Table -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('regradeGradeTable')">
+                        <i class="fas fa-table"></i>
+                        <span>Quick Guide Grade Table</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="regradeGradeTable">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Ratio</th>
+                                    <th>%</th>
+                                    <th>1m Rise</th>
+                                    <th>6m Rise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1:40</td><td>2.500</td><td>25mm</td><td>150mm</td></tr>
+                                <tr><td>1:45</td><td>2.222</td><td>22mm</td><td>133mm</td></tr>
+                                <tr><td>1:50</td><td>2.000</td><td>20mm</td><td>120mm</td></tr>
+                                <tr><td>1:55</td><td>1.818</td><td>18mm</td><td>109mm</td></tr>
+                                <tr><td>1:60</td><td>1.667</td><td>17mm</td><td>100mm</td></tr>
+                                <tr><td>1:65</td><td>1.538</td><td>15mm</td><td>92mm</td></tr>
+                                <tr><td>1:70</td><td>1.429</td><td>14mm</td><td>86mm</td></tr>
+                                <tr><td>1:75</td><td>1.333</td><td>13mm</td><td>80mm</td></tr>
+                                <tr><td>1:80</td><td>1.250</td><td>13mm</td><td>75mm</td></tr>
+                                <tr><td>1:85</td><td>1.176</td><td>12mm</td><td>71mm</td></tr>
+                                <tr><td>1:90</td><td>1.111</td><td>11mm</td><td>67mm</td></tr>
+                                <tr><td>1:95</td><td>1.053</td><td>11mm</td><td>63mm</td></tr>
+                                <tr><td>1:100</td><td>1.000</td><td>10mm</td><td>60mm</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Valuations Section -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('regradeValuations')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tool Valuations - Regrade Tool</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="regradeValuations">
+                        <div class="formula-display">
+                            <div class="formula-title">Regrade Tool Purpose:</div>
+                            <div class="formula-step">• Calculate required grade changes between points</div>
+                            <div class="formula-step">• Determine new grades to achieve target levels</div>
+                            <div class="formula-step">• Essential for construction adjustments and corrections</div>
+                            <br>
+                            <div class="formula-title">Field Applications:</div>
+                            <div class="formula-step">• Construction grade adjustments</div>
+                            <div class="formula-step">• Problem-solving level discrepancies</div>
+                            <div class="formula-step">• Design modification calculations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade Check Tab -->
+        <div id="gradecheck-tab" class="tab-content gradecheck-tool">
+            <div class="main-content">
+                <!-- Grade Verifications Section - Collapsed by Default -->
+                <div class="section-header collapsed" onclick="toggleSection('gradeCheckVerifications', event)">
+                    <i class="fas fa-check-double"></i>
+                    <span>Grade Verifications</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="section-content collapsed" id="gradeCheckVerifications">
+                    <div class="section-inner">
+                        <div id="gradeCheckReadingsContainer"></div>
+
+                        <button class="btn btn-secondary" onclick="addGradeCheckReading()">
+                            <i class="fas fa-plus-circle"></i>
+                            Add Verification Section
+                        </button>
+
+                        <button class="btn btn-warning clear-tool-btn" onclick="clearGradeCheckToolData()">
+                            <i class="fas fa-broom"></i>
+                            Clear Grade Check Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Guide Grade Table -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('gradeCheckGradeTable')">
+                        <i class="fas fa-table"></i>
+                        <span>Quick Guide Grade Table</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="gradeCheckGradeTable">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Ratio</th>
+                                    <th>%</th>
+                                    <th>1m Rise</th>
+                                    <th>6m Rise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1:40</td><td>2.500</td><td>25mm</td><td>150mm</td></tr>
+                                <tr><td>1:45</td><td>2.222</td><td>22mm</td><td>133mm</td></tr>
+                                <tr><td>1:50</td><td>2.000</td><td>20mm</td><td>120mm</td></tr>
+                                <tr><td>1:55</td><td>1.818</td><td>18mm</td><td>109mm</td></tr>
+                                <tr><td>1:60</td><td>1.667</td><td>17mm</td><td>100mm</td></tr>
+                                <tr><td>1:65</td><td>1.538</td><td>15mm</td><td>92mm</td></tr>
+                                <tr><td>1:70</td><td>1.429</td><td>14mm</td><td>86mm</td></tr>
+                                <tr><td>1:75</td><td>1.333</td><td>13mm</td><td>80mm</td></tr>
+                                <tr><td>1:80</td><td>1.250</td><td>13mm</td><td>75mm</td></tr>
+                                <tr><td>1:85</td><td>1.176</td><td>12mm</td><td>71mm</td></tr>
+                                <tr><td>1:90</td><td>1.111</td><td>11mm</td><td>67mm</td></tr>
+                                <tr><td>1:95</td><td>1.053</td><td>11mm</td><td>63mm</td></tr>
+                                <tr><td>1:100</td><td>1.000</td><td>10mm</td><td>60mm</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Valuations Section -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('gradeCheckValuations')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tool Valuations - Grade Check</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="gradeCheckValuations">
+                        <div class="formula-display">
+                            <div class="formula-title">Grade Check Purpose:</div>
+                            <div class="formula-step">• Verify as-constructed grades against design grades</div>
+                            <div class="formula-step">• Calculate percentage and rise/fall differences</div>
+                            <div class="formula-step">• Essential for quality assurance and compliance</div>
+                            <br>
+                            <div class="formula-title">Field Applications:</div>
+                            <div class="formula-step">• Construction quality verification</div>
+                            <div class="formula-step">• Compliance documentation</div>
+                            <div class="formula-step">• Progress payment verification</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chainage IL Tab -->
+        <div id="chainageil-tab" class="tab-content chainageil-tool">
+            <div class="main-content">
+                <!-- Chainage IL Calculations Section - Collapsed by Default -->
+                <div class="section-header collapsed" onclick="toggleSection('chainageILSection', event)">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Chainage IL Calculations</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="section-content collapsed" id="chainageILSection">
+                    <div class="section-inner">
+                        <div id="chainageILReadingsContainer"></div>
+                        
+                        <button class="btn btn-primary" id="addChainageILReadingBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Chainage Calculation
+                        </button>
+
+                        <button class="btn btn-warning clear-tool-btn" onclick="clearChainageILToolData()">
+                            <i class="fas fa-broom"></i>
+                            Clear Chainage Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reference Table - Collapsed by Default -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('chainageILReference')">
+                        <i class="fas fa-table"></i>
+                        <span>Quick Grade Reference</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="chainageILReference">
+                        <table class="grade-table">
+                            <thead>
+                                <tr>
+                                    <th>Ratio</th>
+                                    <th>%</th>
+                                    <th>1m Rise</th>
+                                    <th>6m Rise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1:40</td><td>2.500</td><td>25mm</td><td>150mm</td></tr>
+                                <tr><td>1:45</td><td>2.222</td><td>22mm</td><td>133mm</td></tr>
+                                <tr><td>1:50</td><td>2.000</td><td>20mm</td><td>120mm</td></tr>
+                                <tr><td>1:55</td><td>1.818</td><td>18mm</td><td>109mm</td></tr>
+                                <tr><td>1:60</td><td>1.667</td><td>17mm</td><td>100mm</td></tr>
+                                <tr><td>1:65</td><td>1.538</td><td>15mm</td><td>92mm</td></tr>
+                                <tr><td>1:70</td><td>1.429</td><td>14mm</td><td>86mm</td></tr>
+                                <tr><td>1:75</td><td>1.333</td><td>13mm</td><td>80mm</td></tr>
+                                <tr><td>1:80</td><td>1.250</td><td>13mm</td><td>75mm</td></tr>
+                                <tr><td>1:85</td><td>1.176</td><td>12mm</td><td>71mm</td></tr>
+                                <tr><td>1:90</td><td>1.111</td><td>11mm</td><td>67mm</td></tr>
+                                <tr><td>1:95</td><td>1.053</td><td>11mm</td><td>63mm</td></tr>
+                                <tr><td>1:100</td><td>1.000</td><td>10mm</td><td>60mm</td></tr>
+                                <tr><td>1:110</td><td>0.909</td><td>9mm</td><td>55mm</td></tr>
+                                <tr><td>1:120</td><td>0.833</td><td>8mm</td><td>50mm</td></tr>
+                                <tr><td>1:130</td><td>0.769</td><td>8mm</td><td>46mm</td></tr>
+                                <tr><td>1:140</td><td>0.714</td><td>7mm</td><td>43mm</td></tr>
+                                <tr><td>1:150</td><td>0.667</td><td>7mm</td><td>40mm</td></tr>
+                                <tr><td>1:160</td><td>0.625</td><td>6mm</td><td>38mm</td></tr>
+                                <tr><td>1:180</td><td>0.556</td><td>6mm</td><td>33mm</td></tr>
+                                <tr><td>1:200</td><td>0.500</td><td>5mm</td><td>30mm</td></tr>
+                                <tr><td>1:250</td><td>0.400</td><td>4mm</td><td>24mm</td></tr>
+                                <tr><td>1:300</td><td>0.333</td><td>3mm</td><td>20mm</td></tr>
+                                <tr><td>1:400</td><td>0.250</td><td>3mm</td><td>15mm</td></tr>
+                                <tr><td>1:500</td><td>0.200</td><td>2mm</td><td>12mm</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Valuations Section -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('chainageValuations')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tool Valuations - Chainage IL</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="chainageValuations">
+                        <div class="formula-display">
+                            <div class="formula-title">Chainage IL Purpose:</div>
+                            <div class="formula-step">• Calculate invert levels at any chainage along pipeline</div>
+                            <div class="formula-step">• Essential for setting out and verification</div>
+                            <div class="formula-step">• Maintain design integrity throughout construction</div>
+                            <br>
+                            <div class="formula-title">Field Applications:</div>
+                            <div class="formula-step">• Pipeline set out and establishment</div>
+                            <div class="formula-step">• Construction verification at intermediate points</div>
+                            <div class="formula-step">• Design implementation and checking</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- General Notes Tab -->
+        <div id="generalnotes-tab" class="tab-content generalnotes-tool">
+            <div class="main-content">
+                <!-- General Notes Section - Collapsed by Default -->
+                <div class="section-header collapsed" onclick="toggleSection('generalNotesSection', event)">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>General Notes</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="section-content collapsed" id="generalNotesSection">
+                    <div class="section-inner">
+                        <div id="generalNotesContainer"></div>
+                        
+                        <button class="btn btn-primary" id="addGeneralNoteBtn">
+                            <i class="fas fa-plus"></i>
+                            Add Note
+                        </button>
+
+                        <button class="btn btn-warning clear-tool-btn" onclick="clearGeneralNotesData()">
+                            <i class="fas fa-broom"></i>
+                            Clear All Notes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Valuations Section -->
+                <div class="reference-section">
+                    <div class="reference-header collapsed" onclick="toggleReferenceTable('notesValuations')">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Tool Valuations - General Notes</span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </div>
+                    <div class="reference-content collapsed" id="notesValuations">
+                        <div class="formula-display">
+                            <div class="formula-title">General Notes Purpose:</div>
+                            <div class="formula-step">• Document field observations and conditions</div>
+                            <div class="formula-step">• Record construction progress and issues</div>
+                            <div class="formula-step">• Essential for comprehensive project documentation</div>
+                            <br>
+                            <div class="formula-title">Field Applications:</div>
+                            <div class="formula-step">• Daily site diary and observations</div>
+                            <div class="formula-step">• Construction progress recording</div>
+                            <div class="formula-step">• Issue tracking and resolution documentation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unified Message Preview Section (Always Visible) -->
+        <div class="main-content">
+            <div class="section-header" onclick="toggleSection('unifiedPreviewSection', event)">
+                <i class="fas fa-file-alt"></i>
+                <span>Unified Report Message</span>
+                <i class="fas fa-chevron-down chevron"></i>
+            </div>
+            <div class="section-content" id="unifiedPreviewSection">
+                <div class="section-inner">
+                    <div class="preview-container">
+                        <div class="preview-label">
+                            <i class="fas fa-comment-dots"></i>
+                            Combined Field Report
+                        </div>
+                        <textarea 
+                            class="preview-textarea" 
+                            id="unifiedPreviewText" 
+                            placeholder="Enter project information and add calculations to generate report..."
+                            oninput="handleUnifiedPreviewEdit()"
+                        ></textarea>
+                        <div class="format-warning hidden" id="unifiedFormatWarning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Manual edits will be overwritten when calculations change
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-success" onclick="copyUnifiedMessage()">
+                            <i class="fas fa-copy"></i>
+                            Copy Report
+                        </button>
+                        <button class="btn btn-danger" onclick="clearAllData()">
+                            <i class="fas fa-trash"></i>
+                            Clear All Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle" id="notificationIcon"></i>
+        <span id="notificationText">Operation completed</span>
+    </div>
+
+    <script>
+        // =============================================
+        // UNIFIED APPLICATION STATE
+        // =============================================
+
+        const appState = {
+            pipeLevelCheck: {
+                readings: [],
+                readingCounter: 0
+            },
+            laser: {
+                readings: [],
+                readingCounter: 0
+            },
+            regrade: {
+                readings: [],
+                readingCounter: 0
+            },
+            gradeCheck: {
+                readings: [],
+                readingCounter: 0
+            },
+            chainageIL: {
+                readings: [],
+                readingCounter: 0
+            },
+            generalNotes: {
+                notes: [],
+                noteCounter: 0
+            },
+            manualPreviewEdit: false
+        };
+
+        // =============================================
+        // UNIFIED CONTROLS
+        // =============================================
+
+        // Tab Management
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            showNotification(`${getTabDisplayName(tabName)} activated`);
+        }
+
+        function getTabDisplayName(tabName) {
+            const names = {
+                pipelevelcheck: 'Pipe Level Check',
+                laser: 'Laser Converter',
+                regrade: 'Regrade Tool', 
+                gradecheck: 'Grade Check',
+                chainageil: 'Chainage IL',
+                generalnotes: 'General Notes'
+            };
+            return names[tabName] || tabName;
+        }
+
+        // Section Toggle
+        function toggleSection(sectionId, event) {
+            const section = document.getElementById(sectionId);
+            const header = event.currentTarget;
+            
+            if (!section) return;
+            
+            section.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+            
+            if (!section.classList.contains('collapsed')) {
+                section.style.maxHeight = section.scrollHeight + 'px';
+                setTimeout(() => {
+                    if (!section.classList.contains('collapsed')) {
+                        section.style.maxHeight = 'none';
+                    }
+                }, 300);
+            } else {
+                section.style.maxHeight = section.scrollHeight + 'px';
+                section.offsetHeight;
+                section.style.maxHeight = '0';
+            }
+        }
+
+        // Reference Table Toggle
+        function toggleReferenceTable(referenceId) {
+            const content = document.getElementById(referenceId);
+            const header = event.currentTarget;
+            
+            content.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+        }
+
+        // Reading Card Toggle
+        function toggleReadingCard(cardId) {
+            const card = document.getElementById(cardId);
+            card.classList.toggle('collapsed');
+        }
+
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const icon = themeToggle.querySelector('i');
+            
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                icon.className = 'fas fa-sun';
+                themeToggle.setAttribute('aria-label', 'Switch to light mode');
+            } else {
+                icon.className = 'fas fa-moon';
+                themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+            }
+            
+            showNotification(`${newTheme === 'dark' ? 'Dark' : 'Light'} mode activated`);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                if (themeToggle) {
+                    const icon = themeToggle.querySelector('i');
+                    icon.className = 'fas fa-sun';
+                }
+            }
+        }
+
+        // Notifications
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const notificationIcon = document.getElementById('notificationIcon');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            
+            notificationIcon.className = 'fas';
+            if (type === 'error') {
+                notificationIcon.classList.add('fa-exclamation-circle');
+            } else if (type === 'warning') {
+                notificationIcon.classList.add('fa-exclamation-triangle');
+            } else {
+                notificationIcon.classList.add('fa-check-circle');
+            }
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Format ratio helper function
+        function formatRatio(value) {
+            return Number.isInteger(value) ? value.toString() : value.toFixed(3);
+        }
+
+        // =============================================
+        // UNIFIED MESSAGE GENERATION
+        // =============================================
+
+        function updateUnifiedPreview() {
+            if (appState.manualPreviewEdit) return;
+            
+            const projectName = document.getElementById('unifiedProjectName').value.trim();
+            const stage = document.getElementById('unifiedStage').value.trim();
+            
+            let message = '';
+            
+            // Project Header
+            if (projectName && stage) {
+                message += `${projectName} ${stage}\n\n`;
+            }
+            
+            // Pipe Level Check Section - FIRST as requested
+            const pipeLevelCheckReadings = appState.pipeLevelCheck.readings.filter(r => r.calculated);
+            if (pipeLevelCheckReadings.length > 0) {
+                message += `PIPE LEVEL CHECKS\n\n`;
+                
+                pipeLevelCheckReadings.forEach((reading, index) => {
+                    if (reading.sectionId) {
+                        message += `${reading.sectionId}\n\n`;
+                    }
+                    
+                    const distance = parseFloat(reading.distance);
+                    const measuredHeight = parseFloat(reading.measuredHeight);
+                    const designHeight = parseFloat(reading.results.designHeight);
+                    const difference = parseFloat(reading.results.difference);
+                    const status = reading.results.status.split(' ')[0].toUpperCase();
+                    
+                    message += `CH - ${distance.toFixed(2)}\n`;
+                    message += `DES - ${designHeight.toFixed(3)}\n`;
+                    message += `AS CON - ${measuredHeight.toFixed(3)}\n`;
+                    message += `${status} - ${Math.abs(difference).toFixed(3)}\n\n`;
+                    
+                    if (reading.notes) {
+                        message += `- ${reading.notes}\n\n`;
+                    }
+                    
+                    if (index < pipeLevelCheckReadings.length - 1) {
+                        message += '\n';
+                    }
+                });
+                message += '\n';
+            }
+            
+            // Laser Conversions Section
+            const laserReadings = appState.laser.readings.filter(r => r.gradeRatio || r.laserPercent);
+            if (laserReadings.length > 0) {
+                message += `LASER GRADE CONVERSIONS\n\n`;
+                
+                laserReadings.forEach((reading, index) => {
+                    if (reading.sectionId) {
+                        message += `${reading.sectionId}\n\n`;
+                    }
+                    
+                    const ratio = reading.gradeRatio || (100 / reading.laserPercent);
+                    const percent = reading.laserPercent || (100 / reading.gradeRatio);
+                    const ratioDisplay = formatRatio(ratio);
+                    
+                    message += `GRADE - 1 in ${ratioDisplay}\n`;
+                    message += `LASER - ${percent.toFixed(4)}%\n`;
+                    
+                    if (reading.notes) {
+                        message += `\n- ${reading.notes}\n`;
+                    }
+                    
+                    if (index < laserReadings.length - 1) {
+                        message += '\n';
+                    }
+                });
+                message += '\n';
+            }
+            
+            // Regrade Calculations Section
+            const regradeReadings = appState.regrade.readings.filter(r => r.calculated && r.results);
+            if (regradeReadings.length > 0) {
+                message += `REGRADE CALCULATIONS\n\n`;
+                
+                regradeReadings.forEach((reading, index) => {
+                    if (reading.sectionId) {
+                        message += `${reading.sectionId}\n\n`;
+                    }
+                    
+                    const currentGradeValue = reading.gradeMode === 'percent' ? 
+                        parseFloat(reading.currentGrade) : 
+                        parseFloat(reading.currentRatio);
+                    const currentGradePercent = reading.gradeMode === 'percent' ? 
+                        currentGradeValue : 
+                        100 / currentGradeValue;
+                    const currentGradeRatio = reading.gradeMode === 'percent' ? 
+                        100 / currentGradeValue : 
+                        currentGradeValue;
+                    
+                    const newGradePercent = parseFloat(reading.results.newGradePercent);
+                    const newGradeRatio = parseFloat(reading.results.newGradeRatio);
+                    
+                    message += `REGRADE\n\n`;
+                    message += `FROM - ${currentGradePercent.toFixed(3)}% (1 in ${formatRatio(currentGradeRatio)})\n`;
+                    message += `TO - ${newGradePercent.toFixed(3)}% (1 in ${formatRatio(newGradeRatio)})\n\n`;
+                    
+                    const currentHeight = parseFloat(reading.currentHeight);
+                    const targetHeight = parseFloat(reading.targetHeight);
+                    const distance = parseFloat(reading.distance);
+                    
+                    message += `AS CON IL - ${currentHeight.toFixed(3)}\n`;
+                    message += `TARGET IL - ${targetHeight.toFixed(3)}\n`;
+                    message += `DISTANCE - ${distance.toFixed(3)}\n\n`;
+                    
+                    if (reading.chainage) {
+                        const chainage = parseFloat(reading.chainage);
+                        if (!isNaN(chainage)) {
+                            message += `CHAINAGE - ${chainage.toFixed(2)}\n\n`;
+                        }
+                    }
+                    
+                    if (reading.notes) {
+                        const noteLines = reading.notes.split('\n').filter(line => line.trim());
+                        noteLines.forEach(line => {
+                            message += `- ${line.trim()}\n\n`;
+                        });
+                    }
+                    
+                    if (index < regradeReadings.length - 1) {
+                        message += '\n';
+                    }
+                });
+                message += '\n';
+            }
+            
+            // Grade Check Section
+            const gradeCheckReadings = appState.gradeCheck.readings.filter(r => r.status !== null);
+            if (gradeCheckReadings.length > 0) {
+                message += `GRADE VERIFICATIONS\n\n`;
+                
+                gradeCheckReadings.forEach((reading, index) => {
+                    if (reading.sectionId) {
+                        message += `${reading.sectionId}\n\n`;
+                    }
+                    
+                    const designGradePercent = reading.gradeMode === 'percent' ? 
+                        reading.designGrade : 
+                        100 / reading.designGrade;
+                    
+                    message += `DISTANCE - ${reading.length.toFixed(2)}\n\n`;
+                    
+                    message += `DES GRADE - ${designGradePercent.toFixed(3)}%\n`;
+                    message += `DES RISE/FALL - ${reading.designRise.toFixed(3)}\n`;
+                    message += `DES RISE/FALL PER METER - ${reading.designRisePerMeter.toFixed(3)}mm\n\n`;
+                    
+                    message += `AS CON GRADE - ${reading.actualGrade.toFixed(3)}%\n`;
+                    message += `AS CON RISE/FALL - ${reading.actualRise.toFixed(3)}\n`;
+                    message += `AS CON RISE/FALL PER METER - ${reading.actualRisePerMeter.toFixed(3)}mm\n\n`;
+                    
+                    message += `PERCENTAGE DIFFERENCE - ${reading.percentageDifference.toFixed(3)}%\n`;
+                    message += `RISE/FALL DIFFERENCE - ${reading.riseFallDifference.toFixed(3)}\n\n`;
+                    
+                    if (reading.notes) {
+                        const noteLines = reading.notes.split('\n').filter(line => line.trim());
+                        noteLines.forEach(line => {
+                            message += `- ${line.trim()}\n\n`;
+                        });
+                    }
+                    
+                    if (index < gradeCheckReadings.length - 1) {
+                        message += '\n';
+                    }
+                });
+                message += '\n';
+            }
+            
+            // Chainage IL Section
+            const chainageILReadings = appState.chainageIL.readings.filter(r => r.calculated);
+            if (chainageILReadings.length > 0) {
+                message += `IL AT CHAINAGE\n\n`;
+                
+                chainageILReadings.forEach((reading, index) => {
+                    if (reading.sectionId) {
+                        message += `${reading.sectionId}\n\n`;
+                    }
+                    
+                    const startIL = parseFloat(reading.startIL);
+                    const chainage = parseFloat(reading.targetChainage);
+                    const gradeValue = parseFloat(reading.gradeValue);
+                    const gradePercent = reading.gradeMode === 'percent' ? 
+                        gradeValue : 
+                        100 / gradeValue;
+                    const ilAtChainage = parseFloat(reading.results.ilAtChainage);
+                    
+                    message += `START IL - ${startIL.toFixed(3)}\n`;
+                    message += `CHAINAGE - ${chainage.toFixed(2)}\n`;
+                    message += `GRADE - ${gradePercent.toFixed(3)}%\n`;
+                    message += `IL AT CHAINAGE - ${ilAtChainage.toFixed(3)}\n\n`;
+                    
+                    if (reading.notes) {
+                        message += `- ${reading.notes}\n\n`;
+                    }
+                    
+                    if (index < chainageILReadings.length - 1) {
+                        message += '\n';
+                    }
+                });
+                message += '\n';
+            }
+            
+            // General Notes Section - AT THE BOTTOM as requested
+            const generalNotes = appState.generalNotes.notes.filter(n => n.content && n.content.trim() !== '');
+            if (generalNotes.length > 0) {
+                if (message !== '' && !message.endsWith('\n\n')) {
+                    message += '\n';
+                }
+                message += `GENERAL NOTES\n\n`;
+                
+                generalNotes.forEach((note, index) => {
+                    if (note.content.trim()) {
+                        message += `${note.content.trim()}`;
+                        if (index < generalNotes.length - 1) {
+                            message += '\n\n';
+                        }
+                    }
+                });
+            }
+            
+            // Update preview textarea
+            const previewTextarea = document.getElementById('unifiedPreviewText');
+            previewTextarea.value = message || 
+                'Enter project information and add calculations to generate field report...';
+            document.getElementById('unifiedFormatWarning').classList.add('hidden');
+        }
+
+        function handleUnifiedPreviewEdit() {
+            appState.manualPreviewEdit = true;
+            document.getElementById('unifiedFormatWarning').classList.remove('hidden');
+        }
+
+        function copyUnifiedMessage() {
+            const previewText = document.getElementById('unifiedPreviewText').value;
+            
+            if (!previewText || previewText.includes('Enter project information')) {
+                showNotification('No report content to copy', 'warning');
+                return;
+            }
+            
+            navigator.clipboard.writeText(previewText).then(() => {
+                showNotification('Field report copied to clipboard');
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = previewText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showNotification('Field report copied to clipboard');
+                } catch (e) {
+                    showNotification('Failed to copy report', 'error');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // =============================================
+        // TOOL DATA CLEARING FUNCTIONS
+        // =============================================
+
+        function clearPipeLevelCheckToolData() {
+            if (appState.pipeLevelCheck.readings.length === 0) {
+                showNotification('No pipe level data to clear', 'warning');
+                return;
+            }
+            
+            if (!confirm('Clear all pipe level check data? This cannot be undone.')) return;
+            
+            appState.pipeLevelCheck.readings = [];
+            appState.pipeLevelCheck.readingCounter = 0;
+            
+            addPipeLevelCheckReading(); // Add one empty reading back
+            updateUnifiedPreview();
+            showNotification('Pipe level data cleared');
+        }
+
+        function clearLaserToolData() {
+            if (appState.laser.readings.length === 0) {
+                showNotification('No laser data to clear', 'warning');
+                return;
+            }
+            
+            if (!confirm('Clear all laser conversion data? This cannot be undone.')) return;
+            
+            appState.laser.readings = [];
+            appState.laser.readingCounter = 0;
+            
+            addLaserReading(); // Add one empty reading back
+            updateUnifiedPreview();
+            showNotification('Laser data cleared');
+        }
+
+        function clearRegradeToolData() {
+            if (appState.regrade.readings.length === 0) {
+                showNotification('No regrade data to clear', 'warning');
+                return;
+            }
+            
+            if (!confirm('Clear all regrade calculation data? This cannot be undone.')) return;
+            
+            appState.regrade.readings = [];
+            appState.regrade.readingCounter = 0;
+            
+            addRegradeReading(); // Add one empty reading back
+            updateUnifiedPreview();
+            showNotification('Regrade data cleared');
+        }
+
+        function clearGradeCheckToolData() {
+            if (appState.gradeCheck.readings.length === 0) {
+                showNotification('No grade check data to clear', 'warning');
+                return;
+            }
+            
+            if (!confirm('Clear all grade verification data? This cannot be undone.')) return;
+            
+            appState.gradeCheck.readings = [];
+            appState.gradeCheck.readingCounter = 0;
+            
+            addGradeCheckReading(); // Add one empty reading back
+            updateUnifiedPreview();
+            showNotification('Grade check data cleared');
+        }
+
+        function clearChainageILToolData() {
+            if (appState.chainageIL.readings.length === 0) {
+                showNotification('No chainage data to clear', 'warning');
+                return;
+            }
+            
+            if (!confirm('Clear all chainage calculation data? This cannot be undone.')) return;
+            
+            appState.chainageIL.readings = [];
+            appState.chainageIL.readingCounter = 0;
+            
+            addChainageILReading(); // Add one empty reading back
+            updateUnifiedPreview();
+            showNotification('Chainage data cleared');
+        }
+
+        function clearGeneralNotesData() {
+            if (appState.generalNotes.notes.length === 0) {
+                showNotification('No notes to clear', 'warning');
+                return;
+            }
+            
+            if (!confirm('Clear all notes? This cannot be undone.')) return;
+            
+            appState.generalNotes.notes = [];
+            appState.generalNotes.noteCounter = 0;
+            
+            addGeneralNote(); // Add one empty note back
+            updateUnifiedPreview();
+            showNotification('All notes cleared');
+        }
+
+        function clearAllData() {
+            if (!confirm('Clear ALL data from all tools? This action cannot be undone.')) return;
+            
+            // Clear project info
+            document.getElementById('unifiedProjectName').value = '';
+            document.getElementById('unifiedStage').value = '';
+            
+            // Clear all tool data
+            appState.pipeLevelCheck.readings = [];
+            appState.pipeLevelCheck.readingCounter = 0;
+            appState.laser.readings = [];
+            appState.laser.readingCounter = 0;
+            appState.regrade.readings = [];
+            appState.regrade.readingCounter = 0;
+            appState.gradeCheck.readings = [];
+            appState.gradeCheck.readingCounter = 0;
+            appState.chainageIL.readings = [];
+            appState.chainageIL.readingCounter = 0;
+            appState.generalNotes.notes = [];
+            appState.generalNotes.noteCounter = 0;
+            appState.manualPreviewEdit = false;
+            
+            // Reinitialize each tool with one reading
+            addPipeLevelCheckReading();
+            addLaserReading();
+            addRegradeReading();
+            addGradeCheckReading();
+            addChainageILReading();
+            addGeneralNote();
+            updateUnifiedPreview();
+            
+            showNotification('All data cleared');
+        }
+
+        // =============================================
+        // PIPE LEVEL CHECK TOOL
+        // =============================================
+
+        function addPipeLevelCheckReading() {
+            appState.pipeLevelCheck.readingCounter++;
+            const reading = {
+                id: appState.pipeLevelCheck.readingCounter,
+                sectionId: '',
+                slopeMode: 'percent',
+                slopeValue: null,
+                distance: null,
+                startHeight: null,
+                measuredHeight: null,
+                extraDistance: null,
+                notes: '',
+                calculated: false,
+                results: null
+            };
+            
+            appState.pipeLevelCheck.readings.push(reading);
+            renderPipeLevelCheckReadings();
+            updateUnifiedPreview();
+            showNotification('Pipe level check added');
+        }
+
+        function deletePipeLevelCheckReading(id) {
+            if (appState.pipeLevelCheck.readings.length === 1) {
+                showNotification('Must keep at least one check', 'error');
+                return;
+            }
+            
+            appState.pipeLevelCheck.readings = appState.pipeLevelCheck.readings.filter(r => r.id !== id);
+            renderPipeLevelCheckReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Check deleted');
+        }
+
+        function movePipeLevelCheckReadingUp(index) {
+            if (index === 0) return;
+            [appState.pipeLevelCheck.readings[index - 1], appState.pipeLevelCheck.readings[index]] = 
+            [appState.pipeLevelCheck.readings[index], appState.pipeLevelCheck.readings[index - 1]];
+            renderPipeLevelCheckReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Check moved up');
+        }
+
+        function movePipeLevelCheckReadingDown(index) {
+            if (index === appState.pipeLevelCheck.readings.length - 1) return;
+            [appState.pipeLevelCheck.readings[index], appState.pipeLevelCheck.readings[index + 1]] = 
+            [appState.pipeLevelCheck.readings[index + 1], appState.pipeLevelCheck.readings[index]];
+            renderPipeLevelCheckReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Check moved down');
+        }
+
+        function updatePipeLevelCheckReading(index, field, value) {
+            const reading = appState.pipeLevelCheck.readings[index];
+            if (!reading) return;
+            
+            if (field === 'slopeMode') {
+                reading.slopeMode = value;
+            } else {
+                const trimmedValue = typeof value === 'string' ? value.trim() : value;
+                
+                if (field === 'slopeValue' || field === 'distance' || field === 'startHeight' || field === 'measuredHeight' || field === 'extraDistance') {
+                    if (trimmedValue === '' || trimmedValue === null) {
+                        reading[field] = null;
+                    } else {
+                        const numValue = parseFloat(trimmedValue);
+                        if (!isNaN(numValue)) {
+                            reading[field] = numValue;
+                        }
+                    }
+                } else {
+                    reading[field] = trimmedValue;
+                }
+            }
+            
+            // Auto-calculate if all required fields are present
+            if (reading.slopeValue !== null && reading.slopeValue > 0 && 
+                reading.distance !== null && reading.startHeight !== null && reading.measuredHeight !== null) {
+                calculatePipeLevelCheckReading(index);
+            } else {
+                reading.calculated = false;
+                reading.results = null;
+            }
+            
+            renderPipeLevelCheckReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function togglePipeLevelCheckSlopeMode(index, mode) {
+            updatePipeLevelCheckReading(index, 'slopeMode', mode);
+        }
+
+        function calculatePipeLevelCheckReading(index) {
+            const reading = appState.pipeLevelCheck.readings[index];
+            if (!reading) return;
+            
+            const slopeValue = reading.slopeValue;
+            const distance = reading.distance;
+            const startHeight = reading.startHeight;
+            const measuredHeight = reading.measuredHeight;
+            const mode = reading.slopeMode;
+            
+            // Calculate rise per metre
+            const risePerMetre = mode === 'percent' ? (slopeValue / 100) : (1 / slopeValue);
+            
+            // Calculate design height
+            const designHeight = startHeight + (distance * risePerMetre);
+            
+            // Calculate difference
+            const difference = measuredHeight - designHeight;
+            
+            // Determine status
+            let status, statusClass;
+            if (difference > 0) {
+                status = `HIGH +${Math.abs(difference).toFixed(3)}m`;
+                statusClass = 'status-high';
+            } else if (difference < 0) {
+                status = `LOW -${Math.abs(difference).toFixed(3)}m`;
+                statusClass = 'status-low';
+            } else {
+                status = 'LEVEL';
+                statusClass = 'status-level';
+            }
+            
+            // Store results
+            reading.results = {
+                risePerMetre: risePerMetre,
+                designHeight: designHeight,
+                difference: difference,
+                status: status,
+                statusClass: statusClass
+            };
+            reading.calculated = true;
+            
+            renderPipeLevelCheckReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function updatePipeLevelCheckWithExtra(index) {
+            const reading = appState.pipeLevelCheck.readings[index];
+            if (!reading || !reading.calculated) {
+                showNotification('No calculation to update with extra distance', 'error');
+                return;
+            }
+            
+            const extraDistanceInput = document.getElementById(`extraDistance-${reading.id}`);
+            const extraDistance = parseFloat(extraDistanceInput.value);
+            
+            if (isNaN(extraDistance) || extraDistance === 0) {
+                showNotification('Please enter a valid extra distance', 'error');
+                return;
+            }
+            
+            // Update distance and recalculate
+            reading.distance += extraDistance;
+            reading.extraDistance = extraDistance;
+            
+            // Recalculate with new distance
+            calculatePipeLevelCheckReading(index);
+            
+            // Clear extra distance input
+            extraDistanceInput.value = '';
+            
+            showNotification('Updated with extra distance');
+        }
+
+        function toggleExtraDistanceSection(cardId) {
+            const section = document.getElementById(`extraDistanceSection-${cardId}`);
+            if (section) {
+                section.classList.toggle('hidden');
+            }
+        }
+
+        function renderPipeLevelCheckReadings() {
+            const container = document.getElementById('pipeLevelCheckReadingsContainer');
+            
+            if (appState.pipeLevelCheck.readings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-ruler-combined"></i><p>No pipe level checks yet</p><p class="small">Click "Add Pipe Level Check" to begin</p></div>';
+                return;
+            }
+            
+            container.innerHTML = appState.pipeLevelCheck.readings.map((reading, index) => {
+                const hasCalculation = reading.calculated && reading.results;
+                let resultHtml = '';
+                let converterHtml = '';
+                
+                if (reading.slopeValue !== null && reading.slopeValue > 0) {
+                    if (reading.slopeMode === 'percent') {
+                        const ratio = 100 / reading.slopeValue;
+                        converterHtml = `<div class="converter-text">≈ 1 in ${formatRatio(ratio)} | Rise: ${(reading.slopeValue / 100).toFixed(4)} m/m</div>`;
+                    } else {
+                        const percent = 100 / reading.slopeValue;
+                        converterHtml = `<div class="converter-text">≈ ${percent.toFixed(3)}% | Rise: ${(1 / reading.slopeValue).toFixed(4)} m/m</div>`;
+                    }
+                }
+                
+                if (hasCalculation) {
+                    resultHtml = `
+                        <div class="result-display">
+                            <div class="result-label">Pipe Level Check Result</div>
+                            <div class="result-value ${reading.results.statusClass.replace('status-', '')}">${reading.results.status}</div>
+                            <div class="result-detail">Design Height: ${reading.results.designHeight.toFixed(3)}m</div>
+                            <div class="result-detail">Measured Height: ${reading.measuredHeight.toFixed(3)}m</div>
+                            <div class="result-detail">Difference: ${reading.results.difference >= 0 ? '+' : ''}${reading.results.difference.toFixed(3)}m</div>
+                            <div class="result-detail">Rise per meter: ${reading.results.risePerMetre.toFixed(4)}m/m</div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="reading-card" id="pipeLevelCheckReading-${reading.id}">
+                        <div class="reading-card-header" onclick="toggleReadingCard('pipeLevelCheckReading-${reading.id}')">
+                            <div class="reading-number">
+                                <i class="fas fa-ruler-combined"></i>
+                                Check ${index + 1}${hasCalculation ? ` • ${reading.results.status}` : ''}
+                            </div>
+                            <div class="reading-controls">
+                                <button class="control-btn" onclick="event.stopPropagation(); movePipeLevelCheckReadingUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button class="control-btn" onclick="event.stopPropagation(); movePipeLevelCheckReadingDown(${index})" ${index === appState.pipeLevelCheck.readings.length - 1 ? 'disabled' : ''} title="Move Down">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                                <button class="control-btn delete-btn" onclick="event.stopPropagation(); deletePipeLevelCheckReading(${reading.id})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="reading-card-content">
+                            <div style="padding: 18px;">
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt label-icon"></i>Section ID</label>
+                                    <input 
+                                        type="text" 
+                                        value="${reading.sectionId}" 
+                                        placeholder="e.g., MH05 to MH06"
+                                        onchange="updatePipeLevelCheckReading(${index}, 'sectionId', this.value)"
+                                    >
+                                </div>
+
+                                <div class="mode-toggle">
+                                    <div class="mode-btn ${reading.slopeMode === 'percent' ? 'active' : ''}" onclick="togglePipeLevelCheckSlopeMode(${index}, 'percent')">Percentage (%)</div>
+                                    <div class="mode-btn ${reading.slopeMode === 'ratio' ? 'active' : ''}" onclick="togglePipeLevelCheckSlopeMode(${index}, 'ratio')">Ratio (1 in X)</div>
+                                </div>
+
+                                ${reading.slopeMode === 'percent' ? `
+                                <div class="form-group">
+                                    <label><i class="fas fa-percentage label-icon"></i>Slope (%)</label>
+                                    <input 
+                                        type="number" 
+                                        value="${reading.slopeValue !== null ? reading.slopeValue : ''}" 
+                                        placeholder="e.g., 1.111"
+                                        step="0.001"
+                                        onchange="updatePipeLevelCheckReading(${index}, 'slopeValue', this.value)"
+                                    >
+                                    ${converterHtml}
+                                </div>
+                                ` : `
+                                <div class="form-group">
+                                    <label><i class="fas fa-divide label-icon"></i>Slope (1 in X)</label>
+                                    <input 
+                                        type="number" 
+                                        value="${reading.slopeValue !== null ? reading.slopeValue : ''}" 
+                                        placeholder="e.g., 90"
+                                        step="0.001"
+                                        onchange="updatePipeLevelCheckReading(${index}, 'slopeValue', this.value)"
+                                    >
+                                    ${converterHtml}
+                                </div>
+                                `}
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-ruler-horizontal label-icon"></i>Distance (m)</label>
+                                        <input 
+                                            type="number" 
+                                            value="${reading.distance !== null ? reading.distance : ''}" 
+                                            placeholder="e.g., 25.00"
+                                            step="0.001"
+                                            onchange="updatePipeLevelCheckReading(${index}, 'distance', this.value)"
+                                        >
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-arrow-up label-icon"></i>Start Height (m)</label>
+                                        <input 
+                                            type="number" 
+                                            value="${reading.startHeight !== null ? reading.startHeight : ''}" 
+                                            placeholder="e.g., 179.250"
+                                            step="0.001"
+                                            onchange="updatePipeLevelCheckReading(${index}, 'startHeight', this.value)"
+                                        >
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label><i class="fas fa-tape label-icon"></i>Measured Height (m)</label>
+                                    <input 
+                                        type="number" 
+                                        value="${reading.measuredHeight !== null ? reading.measuredHeight : ''}" 
+                                        placeholder="e.g., 179.730"
+                                        step="0.001"
+                                        onchange="updatePipeLevelCheckReading(${index}, 'measuredHeight', this.value)"
+                                    >
+                                </div>
+                                
+                                ${resultHtml}
+                                
+                                <div class="extra-distance-section hidden" id="extraDistanceSection-${reading.id}">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-ruler-combined label-icon"></i>Extra Distance (m)</label>
+                                        <input 
+                                            type="number" 
+                                            id="extraDistance-${reading.id}"
+                                            placeholder="e.g., 5.00"
+                                            step="0.001"
+                                        >
+                                        <button class="btn btn-warning" style="margin-top: 10px; width: 100%;" onclick="updatePipeLevelCheckWithExtra(${index})">
+                                            <i class="fas fa-sync"></i> Update with Extra Distance
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-info" style="width: 100%; margin-top: 10px;" onclick="toggleExtraDistanceSection(${reading.id})">
+                                    <i class="fas fa-plus-circle"></i> Add Extra Distance
+                                </button>
+                                
+                                <div class="form-group">
+                                    <label><i class="fas fa-sticky-note label-icon"></i>Notes (Optional)</label>
+                                    <textarea 
+                                        placeholder="e.g., Measurement notes..."
+                                        onchange="updatePipeLevelCheckReading(${index}, 'notes', this.value)">${reading.notes}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add event listeners for mode toggles
+            appState.pipeLevelCheck.readings.forEach((reading, index) => {
+                const percentBtn = document.querySelector(`#pipeLevelCheckReading-${reading.id} .mode-btn:nth-child(1)`);
+                const ratioBtn = document.querySelector(`#pipeLevelCheckReading-${reading.id} .mode-btn:nth-child(2)`);
+                
+                if (percentBtn) {
+                    percentBtn.addEventListener('click', () => togglePipeLevelCheckSlopeMode(index, 'percent'));
+                }
+                if (ratioBtn) {
+                    ratioBtn.addEventListener('click', () => togglePipeLevelCheckSlopeMode(index, 'ratio'));
+                }
+            });
+        }
+
+        // =============================================
+        // LASER CONVERTER TOOL
+        // =============================================
+
+        function addLaserReading() {
+            appState.laser.readingCounter++;
+            const reading = {
+                id: appState.laser.readingCounter,
+                sectionId: '',
+                gradeRatio: null,
+                laserPercent: null,
+                notes: ''
+            };
+            
+            appState.laser.readings.push(reading);
+            renderLaserReadings();
+            updateUnifiedPreview();
+            showNotification('Laser conversion added');
+        }
+
+        function deleteLaserReading(id) {
+            if (appState.laser.readings.length === 1) {
+                showNotification('Must keep at least one conversion', 'error');
+                return;
+            }
+            
+            appState.laser.readings = appState.laser.readings.filter(r => r.id !== id);
+            renderLaserReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Conversion deleted');
+        }
+
+        function moveLaserReadingUp(index) {
+            if (index === 0) return;
+            [appState.laser.readings[index - 1], appState.laser.readings[index]] = [appState.laser.readings[index], appState.laser.readings[index - 1]];
+            renderLaserReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Conversion moved up');
+        }
+
+        function moveLaserReadingDown(index) {
+            if (index === appState.laser.readings.length - 1) return;
+            [appState.laser.readings[index], appState.laser.readings[index + 1]] = [appState.laser.readings[index + 1], appState.laser.readings[index]];
+            renderLaserReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Conversion moved down');
+        }
+
+        function updateLaserReading(index, field, value) {
+            const reading = appState.laser.readings[index];
+            if (!reading) return;
+            
+            const trimmedValue = typeof value === 'string' ? value.trim() : value;
+            
+            if (field === 'gradeRatio') {
+                if (trimmedValue === '' || trimmedValue === null) {
+                    reading.gradeRatio = null;
+                    reading.laserPercent = null;
+                } else {
+                    const numValue = parseFloat(trimmedValue);
+                    if (!isNaN(numValue) && numValue > 0) {
+                        reading.gradeRatio = numValue;
+                        reading.laserPercent = 100 / numValue;
+                    }
+                }
+            } else if (field === 'laserPercent') {
+                if (trimmedValue === '' || trimmedValue === null) {
+                    reading.gradeRatio = null;
+                    reading.laserPercent = null;
+                } else {
+                    const numValue = parseFloat(trimmedValue);
+                    if (!isNaN(numValue) && numValue > 0) {
+                        reading.laserPercent = numValue;
+                        reading.gradeRatio = 100 / numValue;
+                    }
+                }
+            } else {
+                reading[field] = trimmedValue;
+            }
+            
+            renderLaserReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function renderLaserReadings() {
+            const container = document.getElementById('laserReadingsContainer');
+            
+            if (appState.laser.readings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>No conversions yet</p><p class="small">Click "Add Conversion" to begin</p></div>';
+                return;
+            }
+            
+            container.innerHTML = appState.laser.readings.map((reading, index) => {
+                const hasCalculation = reading.gradeRatio || reading.laserPercent;
+                let resultHtml = '';
+                
+                if (hasCalculation) {
+                    const ratio = reading.gradeRatio || (100 / reading.laserPercent);
+                    const percent = reading.laserPercent || (100 / reading.gradeRatio);
+                    const risePerMeter = percent / 100;
+                    const risePer6m = risePerMeter * 6;
+                    
+                    const ratioDisplay = formatRatio(ratio);
+                    
+                    resultHtml = `
+                        <div class="result-display">
+                            <div class="result-label">Laser Grade</div>
+                            <div class="result-value">${percent.toFixed(4)}%</div>
+                            <div class="result-detail">Ratio: 1 in ${ratioDisplay}</div>
+                            <div class="result-detail">Rise per 1m: ${(risePerMeter * 1000).toFixed(1)}mm</div>
+                            <div class="result-detail">Rise per 6m: ${(risePer6m * 1000).toFixed(1)}mm</div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="reading-card" id="laserReading-${reading.id}">
+                        <div class="reading-card-header" onclick="toggleReadingCard('laserReading-${reading.id}')">
+                            <div class="reading-number">
+                                <i class="fas fa-bullseye"></i>
+                                Conversion ${index + 1}
+                            </div>
+                            <div class="reading-controls">
+                                <button class="control-btn" onclick="event.stopPropagation(); moveLaserReadingUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button class="control-btn" onclick="event.stopPropagation(); moveLaserReadingDown(${index})" ${index === appState.laser.readings.length - 1 ? 'disabled' : ''} title="Move Down">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                                <button class="control-btn delete-btn" onclick="event.stopPropagation(); deleteLaserReading(${reading.id})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="reading-card-content">
+                            <div style="padding: 18px;">
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt label-icon"></i>Section ID (Optional)</label>
+                                    <input 
+                                        type="text" 
+                                        value="${reading.sectionId}" 
+                                        placeholder="e.g., MH05 to MH06"
+                                        onchange="updateLaserReading(${index}, 'sectionId', this.value)"
+                                    >
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-divide label-icon"></i>Grade Ratio (1 in X)</label>
+                                        <input 
+                                            type="number" 
+                                            value="${reading.gradeRatio || ''}" 
+                                            placeholder="e.g., 90"
+                                            step="0.001"
+                                            onchange="updateLaserReading(${index}, 'gradeRatio', this.value)"
+                                        >
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-percentage label-icon"></i>OR Laser %</label>
+                                        <input 
+                                            type="number" 
+                                            value="${reading.laserPercent || ''}" 
+                                            placeholder="e.g., 1.1111"
+                                            step="0.0001"
+                                            onchange="updateLaserReading(${index}, 'laserPercent', this.value)"
+                                        >
+                                    </div>
+                                </div>
+                                
+                                ${resultHtml}
+                                
+                                <div class="form-group">
+                                    <label><i class="fas fa-sticky-note label-icon"></i>Notes (Optional)</label>
+                                    <textarea 
+                                        placeholder="e.g., Equipment setup notes..."
+                                        onchange="updateLaserReading(${index}, 'notes', this.value)">${reading.notes}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =============================================
+        // REGRADE TOOL
+        // =============================================
+
+        function calculateGradeValues(mode, value) {
+            if (mode === 'percent') {
+                return {
+                    percent: value,
+                    ratio: 100 / value,
+                    risePerMeter: value / 100
+                };
+            } else {
+                return {
+                    percent: 100 / value,
+                    ratio: value,
+                    risePerMeter: 1 / value
+                };
+            }
+        }
+
+        function formatToThreeDecimals(num) {
+            if (isNaN(num)) return '--';
+            return num.toFixed(3);
+        }
+
+        function addRegradeReading() {
+            const reading = {
+                id: ++appState.regrade.readingCounter,
+                sectionId: '',
+                gradeMode: 'percent',
+                currentGrade: '',
+                currentRatio: '',
+                distance: '',
+                currentHeight: '',
+                targetHeight: '',
+                chainage: '',
+                notes: '',
+                calculated: false,
+                results: null
+            };
+            
+            appState.regrade.readings.push(reading);
+            renderRegradeReadings();
+            showNotification('Regrade calculation added');
+        }
+
+        function deleteRegradeReading(index) {
+            if (appState.regrade.readings.length === 1) {
+                showNotification('Cannot delete the last calculation', 'error');
+                return;
+            }
+            
+            appState.regrade.readings.splice(index, 1);
+            renderRegradeReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Calculation deleted');
+        }
+
+        function moveRegradeReadingUp(index) {
+            if (index === 0) return;
+            [appState.regrade.readings[index - 1], appState.regrade.readings[index]] = [appState.regrade.readings[index], appState.regrade.readings[index - 1]];
+            renderRegradeReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Calculation moved up');
+        }
+
+        function moveRegradeReadingDown(index) {
+            if (index === appState.regrade.readings.length - 1) return;
+            [appState.regrade.readings[index], appState.regrade.readings[index + 1]] = [appState.regrade.readings[index + 1], appState.regrade.readings[index]];
+            renderRegradeReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Calculation moved down');
+        }
+
+        function updateRegradeReading(index, field, value) {
+            if (appState.regrade.readings[index]) {
+                appState.regrade.readings[index][field] = value;
+                appState.manualPreviewEdit = false;
+                updateUnifiedPreview();
+            }
+        }
+
+        function toggleRegradeReadingGradeMode(index, mode) {
+            if (appState.regrade.readings[index]) {
+                appState.regrade.readings[index].gradeMode = mode;
+                renderRegradeReadings();
+                appState.manualPreviewEdit = false;
+                updateUnifiedPreview();
+            }
+        }
+
+        function calculateRegradeReading(index) {
+            const reading = appState.regrade.readings[index];
+            const card = document.getElementById(`regradeReading-${reading.id}`);
+            
+            // Validation
+            const mode = reading.gradeMode;
+            const currentGradeValue = mode === 'percent' ? parseFloat(reading.currentGrade) : parseFloat(reading.currentRatio);
+            const distance = parseFloat(reading.distance);
+            const currentHeight = parseFloat(reading.currentHeight);
+            const targetHeight = parseFloat(reading.targetHeight);
+            
+            if (isNaN(currentGradeValue) || currentGradeValue <= 0) {
+                showNotification('Please enter a valid current grade value', 'error');
+                return;
+            }
+            if (isNaN(distance) || distance <= 0) {
+                showNotification('Please enter a valid distance', 'error');
+                return;
+            }
+            if (isNaN(currentHeight)) {
+                showNotification('Please enter a valid current height', 'error');
+                return;
+            }
+            if (isNaN(targetHeight)) {
+                showNotification('Please enter a valid target height', 'error');
+                return;
+            }
+            
+            // Add calculating animation
+            if (card) {
+                card.classList.add('calculating');
+            }
+            
+            // Calculate current grade in percentage
+            const currentGradePercent = mode === 'percent' ? currentGradeValue : 100 / currentGradeValue;
+            
+            // Calculate required new grade
+            const heightDiff = targetHeight - currentHeight;
+            const newGradePercent = (heightDiff / distance) * 100;
+            const newGradeRatio = 100 / Math.abs(newGradePercent);
+            
+            // Calculate changes
+            const gradeChange = newGradePercent - currentGradePercent;
+            const heightDiffMm = heightDiff * 1000;
+            
+            // Calculate 6m pipe adjustment
+            const adjustmentPer6m = (heightDiff / distance) * 6 * 1000;
+            
+            // Store results
+            reading.results = {
+                newGradePercent: formatToThreeDecimals(newGradePercent),
+                newGradeRatio: formatToThreeDecimals(newGradeRatio),
+                gradeChange: `${gradeChange >= 0 ? '+' : ''}${formatToThreeDecimals(gradeChange)}`,
+                heightChange: `${heightDiff >= 0 ? '+' : ''}${formatToThreeDecimals(heightDiff)}`,
+                adjustmentPer6m: `${adjustmentPer6m >= 0 ? '+' : ''}${adjustmentPer6m.toFixed(0)}`
+            };
+            reading.calculated = true;
+            
+            // Remove calculating animation and update
+            setTimeout(() => {
+                if (card) {
+                    card.classList.remove('calculating');
+                }
+                renderRegradeReadings();
+                updateUnifiedPreview();
+                showNotification('Regrade calculation completed');
+            }, 300);
+        }
+
+        function renderRegradeReadings() {
+            const container = document.getElementById('regradeReadingsContainer');
+            
+            if (appState.regrade.readings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-calculator"></i><p>No calculations yet</p><p class="small">Click "Add Regrade Calculation" to begin</p></div>';
+                return;
+            }
+            
+            container.innerHTML = appState.regrade.readings.map((reading, index) => `
+                <div class="reading-card" id="regradeReading-${reading.id}">
+                    <div class="reading-card-header" onclick="toggleReadingCard('regradeReading-${reading.id}')">
+                        <div class="reading-number">
+                            <i class="fas fa-calculator"></i> Calculation ${index + 1}
+                        </div>
+                        <div class="reading-controls">
+                            <button class="control-btn" onclick="event.stopPropagation(); moveRegradeReadingUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button class="control-btn" onclick="event.stopPropagation(); moveRegradeReadingDown(${index})" ${index === appState.regrade.readings.length - 1 ? 'disabled' : ''} title="Move Down">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                            <button class="control-btn delete-btn" onclick="event.stopPropagation(); deleteRegradeReading(${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="reading-card-content">
+                        <div style="padding: 18px;">
+                            <div class="form-group">
+                                <label><i class="fas fa-map-marker-alt label-icon"></i>Section ID</label>
+                                <input type="text" value="${reading.sectionId}" onchange="updateRegradeReading(${index}, 'sectionId', this.value)" placeholder="e.g., MH01 to MH02">
+                            </div>
+
+                            <div class="mode-toggle">
+                                <div class="mode-btn ${reading.gradeMode === 'percent' ? 'active' : ''}" onclick="toggleRegradeReadingGradeMode(${index}, 'percent')">Percentage (%)</div>
+                                <div class="mode-btn ${reading.gradeMode === 'ratio' ? 'active' : ''}" onclick="toggleRegradeReadingGradeMode(${index}, 'ratio')">Ratio (1 in X)</div>
+                            </div>
+
+                            ${reading.gradeMode === 'percent' ? `
+                            <div class="form-group">
+                                <label><i class="fas fa-percentage label-icon"></i>Current Grade (%)</label>
+                                <input type="number" value="${reading.currentGrade}" onchange="updateRegradeReading(${index}, 'currentGrade', this.value)" placeholder="e.g., 2.5" step="0.001">
+                            </div>
+                            ` : `
+                            <div class="form-group">
+                                <label><i class="fas fa-divide label-icon"></i>Current Ratio (1 in X)</label>
+                                <input type="number" value="${reading.currentRatio}" onchange="updateRegradeReading(${index}, 'currentRatio', this.value)" placeholder="e.g., 50" step="0.001">
+                            </div>
+                            `}
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-ruler-horizontal label-icon"></i>Distance (m)</label>
+                                    <input type="number" value="${reading.distance}" onchange="updateRegradeReading(${index}, 'distance', this.value)" placeholder="Horizontal distance" step="0.001">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-link label-icon"></i>Chainage (Optional)</label>
+                                    <input type="number" value="${reading.chainage}" onchange="updateRegradeReading(${index}, 'chainage', this.value)" placeholder="Pipeline position" step="0.01">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label><i class="fas fa-arrow-down label-icon"></i>Current IL (m)</label>
+                                    <input type="number" value="${reading.currentHeight}" onchange="updateRegradeReading(${index}, 'currentHeight', this.value)" placeholder="Current pipe height" step="0.001">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-arrow-up label-icon"></i>Target IL (m)</label>
+                                    <input type="number" value="${reading.targetHeight}" onchange="updateRegradeReading(${index}, 'targetHeight', this.value)" placeholder="Required height" step="0.001">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label><i class="fas fa-sticky-note label-icon"></i>Notes (Optional)</label>
+                                <textarea onchange="updateRegradeReading(${index}, 'notes', this.value)" placeholder="Add any notes for this regrade...">${reading.notes}</textarea>
+                            </div>
+
+                            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="calculateRegradeReading(${index})">
+                                <i class="fas fa-calculator"></i> Calculate Regrade
+                            </button>
+
+                            ${reading.calculated && reading.results ? `
+                            <div class="result-display" style="margin-top: 15px;">
+                                <div class="result-label">Regrade Results</div>
+                                <div class="result-value">New Grade: ${reading.results.newGradePercent}%</div>
+                                <div class="result-detail">New Ratio: 1 in ${reading.results.newGradeRatio}</div>
+                                <div class="result-detail">Grade Change: ${reading.results.gradeChange}%</div>
+                                <div class="result-detail">Height Adjustment: ${reading.results.heightChange}m</div>
+                                <div class="result-detail">6m Pipe Adjustment: ${reading.results.adjustmentPer6m}mm</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =============================================
+        // GRADE CHECK TOOL
+        // =============================================
+
+        function getGradeCheckInputValue(id) {
+            const input = document.getElementById(id);
+            if (!input) return null;
+            const value = parseFloat(input.value);
+            return isNaN(value) ? null : value;
+        }
+
+        function addGradeCheckReading() {
+            appState.gradeCheck.readingCounter++;
+            const readingId = appState.gradeCheck.readingCounter;
+            
+            const reading = {
+                id: readingId,
+                sectionId: '',
+                downstreamIL: null,
+                upstreamIL: null,
+                length: null,
+                designGrade: null,
+                gradeMode: 'percent',
+                designRise: null,
+                designRisePerMeter: null,
+                actualGrade: null,
+                actualRise: null,
+                actualRisePerMeter: null,
+                percentageDifference: null,
+                riseFallDifference: null,
+                status: null,
+                notes: ''
+            };
+            
+            appState.gradeCheck.readings.push(reading);
+            renderGradeCheckReadings();
+            updateUnifiedPreview();
+            showNotification('Verification section added');
+        }
+
+        function removeGradeCheckReading(id) {
+            if (appState.gradeCheck.readings.length === 1) {
+                showNotification('Cannot remove the last section', 'error');
+                return;
+            }
+            
+            appState.gradeCheck.readings = appState.gradeCheck.readings.filter(r => r.id !== id);
+            renderGradeCheckReadings();
+            updateUnifiedPreview();
+            showNotification('Section removed');
+        }
+
+        function moveGradeCheckReadingUp(index) {
+            if (index === 0) return;
+            [appState.gradeCheck.readings[index - 1], appState.gradeCheck.readings[index]] = [appState.gradeCheck.readings[index], appState.gradeCheck.readings[index - 1]];
+            renderGradeCheckReadings();
+            updateUnifiedPreview();
+            showNotification('Section moved up');
+        }
+
+        function moveGradeCheckReadingDown(index) {
+            if (index === appState.gradeCheck.readings.length - 1) return;
+            [appState.gradeCheck.readings[index], appState.gradeCheck.readings[index + 1]] = [appState.gradeCheck.readings[index + 1], appState.gradeCheck.readings[index]];
+            renderGradeCheckReadings();
+            updateUnifiedPreview();
+            showNotification('Section moved down');
+        }
+
+        function updateGradeCheckReading(id) {
+            const reading = appState.gradeCheck.readings.find(r => r.id === id);
+            if (!reading) return;
+            
+            const card = document.getElementById(`gradeCheckReading-${id}`);
+            if (card) {
+                card.classList.add('calculating');
+            }
+            
+            const sectionIdInput = document.getElementById(`sectionId-${id}`);
+            const sectionId = sectionIdInput ? sectionIdInput.value.trim() : '';
+            const downstream = getGradeCheckInputValue(`downstream-${id}`);
+            const upstream = getGradeCheckInputValue(`upstream-${id}`);
+            const length = getGradeCheckInputValue(`length-${id}`);
+            const designGrade = reading.gradeMode === 'percent' ? 
+                getGradeCheckInputValue(`gradePercent-${id}`) : 
+                getGradeCheckInputValue(`gradeRatio-${id}`);
+            const notesInput = document.getElementById(`notes-${id}`);
+            const notes = notesInput ? notesInput.value.trim() : '';
+            
+            reading.sectionId = sectionId;
+            reading.downstreamIL = downstream;
+            reading.upstreamIL = upstream;
+            reading.length = length;
+            reading.designGrade = designGrade;
+            reading.notes = notes;
+            
+            // Calculate if all values present
+            if (downstream !== null && upstream !== null && length !== null && designGrade !== null && length > 0) {
+                const rise = upstream - downstream;
+                
+                // Convert design grade to percentage
+                const designGradePercent = reading.gradeMode === 'percent' ? 
+                    designGrade : 
+                    100 / designGrade;
+                
+                // Design calculations
+                reading.designRise = length * (designGradePercent / 100);
+                reading.designRisePerMeter = (reading.designRise / length) * 1000;
+                
+                // As-constructed calculations
+                reading.actualGrade = (rise / length) * 100;
+                reading.actualRise = rise;
+                reading.actualRisePerMeter = (rise / length) * 1000;
+                
+                // Differences
+                reading.percentageDifference = Math.abs(reading.actualGrade - designGradePercent);
+                reading.riseFallDifference = Math.abs(reading.actualRise - reading.designRise);
+                
+                reading.status = 'calculated';
+                
+                const resultDiv = document.getElementById(`gradeCheckResult-${id}`);
+                if (resultDiv) {
+                    resultDiv.innerHTML = `
+                        <div class="result-label">Verification Summary</div>
+                        <div class="result-value">Design: ${designGradePercent.toFixed(3)}% | As-Con: ${reading.actualGrade.toFixed(3)}%</div>
+                        <div class="result-detail">Design Rise: ${reading.designRise.toFixed(3)}m (${reading.designRisePerMeter.toFixed(3)}mm/m)</div>
+                        <div class="result-detail">As-Con Rise: ${reading.actualRise.toFixed(3)}m (${reading.actualRisePerMeter.toFixed(3)}mm/m)</div>
+                        <div class="result-detail">Difference: ${reading.percentageDifference.toFixed(3)}% | ${reading.riseFallDifference.toFixed(3)}m</div>
+                    `;
+                    resultDiv.classList.remove('hidden');
+                }
+            } else {
+                reading.actualGrade = null;
+                reading.status = null;
+                const resultDiv = document.getElementById(`gradeCheckResult-${id}`);
+                if (resultDiv) {
+                    resultDiv.classList.add('hidden');
+                }
+            }
+            
+            // Remove calculating animation
+            setTimeout(() => {
+                if (card) {
+                    card.classList.remove('calculating');
+                }
+            }, 300);
+            
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function toggleGradeCheckGradeMode(id, mode) {
+            const reading = appState.gradeCheck.readings.find(r => r.id === id);
+            if (!reading) return;
+            
+            reading.gradeMode = mode;
+            reading.designGrade = null;
+            renderGradeCheckReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification(`Switched to ${mode === 'percent' ? 'percentage' : 'ratio'} mode`);
+        }
+
+        function renderGradeCheckReadings() {
+            const container = document.getElementById('gradeCheckReadingsContainer');
+            
+            if (appState.gradeCheck.readings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-check-double"></i><p>No verifications yet</p><p class="small">Click "Add Verification Section" to begin</p></div>';
+                return;
+            }
+            
+            container.innerHTML = appState.gradeCheck.readings.map((reading, index) => `
+                <div class="reading-card" id="gradeCheckReading-${reading.id}">
+                    <div class="reading-card-header" onclick="toggleReadingCard('gradeCheckReading-${reading.id}')">
+                        <span class="reading-number">Section ${index + 1}</span>
+                        <div class="reading-controls">
+                            <button class="control-btn" onclick="event.stopPropagation(); moveGradeCheckReadingUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button class="control-btn" onclick="event.stopPropagation(); moveGradeCheckReadingDown(${index})" ${index === appState.gradeCheck.readings.length - 1 ? 'disabled' : ''} title="Move Down">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                            <button class="control-btn delete-btn" onclick="event.stopPropagation(); removeGradeCheckReading(${reading.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="reading-card-content">
+                        <div style="padding: 18px;">
+                            <div class="form-group">
+                                <label for="sectionId-${reading.id}"><i class="fas fa-map-marker-alt label-icon"></i>Section ID</label>
+                                <input type="text" id="sectionId-${reading.id}" 
+                                       placeholder="e.g., 79-MH05 to 79-MH06"
+                                       value="${reading.sectionId}"
+                                       oninput="updateGradeCheckReading(${reading.id})">
+                            </div>
+
+                            <div class="form-row">
+                                <div>
+                                    <label for="downstream-${reading.id}"><i class="fas fa-arrow-down label-icon"></i>Downstream IL (m)</label>
+                                    <input type="number" id="downstream-${reading.id}" 
+                                           placeholder="e.g., 179.250" step="0.001"
+                                           value="${reading.downstreamIL !== null ? reading.downstreamIL : ''}"
+                                           oninput="updateGradeCheckReading(${reading.id})">
+                                </div>
+                                <div>
+                                    <label for="upstream-${reading.id}"><i class="fas fa-arrow-up label-icon"></i>Upstream IL (m)</label>
+                                    <input type="number" id="upstream-${reading.id}" 
+                                           placeholder="e.g., 179.730" step="0.001"
+                                           value="${reading.upstreamIL !== null ? reading.upstreamIL : ''}"
+                                           oninput="updateGradeCheckReading(${reading.id})">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="length-${reading.id}"><i class="fas fa-ruler-horizontal label-icon"></i>Pipe Length (m)</label>
+                                <input type="number" id="length-${reading.id}" 
+                                       placeholder="e.g., 43.18" step="0.01"
+                                       value="${reading.length !== null ? reading.length : ''}"
+                                       oninput="updateGradeCheckReading(${reading.id})">
+                            </div>
+
+                            <div class="mode-toggle">
+                                <div class="mode-btn ${reading.gradeMode === 'percent' ? 'active' : ''}" onclick="toggleGradeCheckGradeMode(${reading.id}, 'percent')">Percentage (%)</div>
+                                <div class="mode-btn ${reading.gradeMode === 'ratio' ? 'active' : ''}" onclick="toggleGradeCheckGradeMode(${reading.id}, 'ratio')">Ratio (1 in X)</div>
+                            </div>
+
+                            <div id="percentInput-${reading.id}" ${reading.gradeMode !== 'percent' ? 'class="hidden"' : ''}>
+                                <div class="form-group">
+                                    <label for="gradePercent-${reading.id}"><i class="fas fa-percentage label-icon"></i>Design Grade (%)</label>
+                                    <input type="number" id="gradePercent-${reading.id}" 
+                                           placeholder="e.g., 1.111" step="0.001"
+                                           value="${reading.gradeMode === 'percent' && reading.designGrade !== null ? reading.designGrade : ''}"
+                                           oninput="updateGradeCheckReading(${reading.id})">
+                                </div>
+                            </div>
+
+                            <div id="ratioInput-${reading.id}" ${reading.gradeMode !== 'ratio' ? 'class="hidden"' : ''}>
+                                <div class="form-group">
+                                    <label for="gradeRatio-${reading.id}"><i class="fas fa-divide label-icon"></i>Design Grade (1 in X)</label>
+                                    <input type="number" id="gradeRatio-${reading.id}" 
+                                           placeholder="e.g., 90" step="0.001"
+                                           value="${reading.gradeMode === 'ratio' && reading.designGrade !== null ? reading.designGrade : ''}"
+                                           oninput="updateGradeCheckReading(${reading.id})">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="notes-${reading.id}"><i class="fas fa-sticky-note label-icon"></i>Notes (Optional)</label>
+                                <textarea id="notes-${reading.id}" 
+                                          placeholder="Additional notes for this section..." 
+                                          oninput="updateGradeCheckReading(${reading.id})">${reading.notes || ''}</textarea>
+                            </div>
+                            
+                            <div id="gradeCheckResult-${reading.id}" class="result-display ${reading.status ? '' : 'hidden'}"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // =============================================
+        // CHAINAGE IL TOOL
+        // =============================================
+
+        function addChainageILReading() {
+            appState.chainageIL.readingCounter++;
+            const reading = {
+                id: appState.chainageIL.readingCounter,
+                sectionId: '',
+                startIL: null,
+                targetChainage: null,
+                gradeMode: 'percent',
+                gradeValue: null,
+                notes: '',
+                calculated: false,
+                results: null
+            };
+            
+            appState.chainageIL.readings.push(reading);
+            renderChainageILReadings();
+            updateUnifiedPreview();
+            showNotification('Chainage calculation added');
+        }
+
+        function deleteChainageILReading(id) {
+            if (appState.chainageIL.readings.length === 1) {
+                showNotification('Must keep at least one calculation', 'error');
+                return;
+            }
+            
+            appState.chainageIL.readings = appState.chainageIL.readings.filter(r => r.id !== id);
+            renderChainageILReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Calculation deleted');
+        }
+
+        function moveChainageILReadingUp(index) {
+            if (index === 0) return;
+            [appState.chainageIL.readings[index - 1], appState.chainageIL.readings[index]] = 
+            [appState.chainageIL.readings[index], appState.chainageIL.readings[index - 1]];
+            renderChainageILReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Calculation moved up');
+        }
+
+        function moveChainageILReadingDown(index) {
+            if (index === appState.chainageIL.readings.length - 1) return;
+            [appState.chainageIL.readings[index], appState.chainageIL.readings[index + 1]] = 
+            [appState.chainageIL.readings[index + 1], appState.chainageIL.readings[index]];
+            renderChainageILReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Calculation moved down');
+        }
+
+        function updateChainageILReading(index, field, value) {
+            const reading = appState.chainageIL.readings[index];
+            if (!reading) return;
+            
+            if (field === 'gradeMode') {
+                reading.gradeMode = value;
+                reading.gradeValue = null;
+            } else {
+                const trimmedValue = typeof value === 'string' ? value.trim() : value;
+                
+                if (field === 'startIL' || field === 'targetChainage' || field === 'gradeValue') {
+                    if (trimmedValue === '' || trimmedValue === null) {
+                        reading[field] = null;
+                    } else {
+                        const numValue = parseFloat(trimmedValue);
+                        if (!isNaN(numValue)) {
+                            reading[field] = numValue;
+                        }
+                    }
+                } else {
+                    reading[field] = trimmedValue;
+                }
+            }
+            
+            // Auto-calculate if all required fields are present
+            if (reading.startIL !== null && reading.targetChainage !== null && reading.gradeValue !== null && reading.gradeValue > 0) {
+                calculateChainageILReading(index);
+            } else {
+                reading.calculated = false;
+                reading.results = null;
+            }
+            
+            renderChainageILReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function toggleChainageILGradeMode(index, mode) {
+            updateChainageILReading(index, 'gradeMode', mode);
+        }
+
+        function calculateChainageILReading(index) {
+            const reading = appState.chainageIL.readings[index];
+            if (!reading) return;
+            
+            const startIL = reading.startIL;
+            const chainage = reading.targetChainage;
+            const gradeValue = reading.gradeValue;
+            const mode = reading.gradeMode;
+            
+            // Calculate rise per metre (without rounding)
+            const risePerMetre = mode === 'percent' ? (gradeValue / 100) : (1 / gradeValue);
+            
+            // Total rise over distance (without rounding)
+            const totalRise = risePerMetre * chainage;
+            
+            // IL at chainage (round only final result)
+            const ilAtChainage = startIL + totalRise;
+            
+            // Store results
+            reading.results = {
+                risePerMetre: risePerMetre,
+                totalRise: totalRise,
+                ilAtChainage: ilAtChainage
+            };
+            reading.calculated = true;
+            
+            renderChainageILReadings();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function renderChainageILReadings() {
+            const container = document.getElementById('chainageILReadingsContainer');
+            
+            if (appState.chainageIL.readings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-map-marker-alt"></i><p>No calculations yet</p><p class="small">Click "Add Chainage Calculation" to begin</p></div>';
+                return;
+            }
+            
+            container.innerHTML = appState.chainageIL.readings.map((reading, index) => {
+                const hasCalculation = reading.calculated && reading.results;
+                let resultHtml = '';
+                let converterHtml = '';
+                
+                if (reading.gradeValue !== null && reading.gradeValue > 0) {
+                    if (reading.gradeMode === 'percent') {
+                        const calc = calculateGradeValues('percent', reading.gradeValue);
+                        converterHtml = `<div class="converter-text">≈ 1 in ${formatRatio(calc.ratio)} | Rise: ${calc.risePerMeter.toFixed(4)} m/m</div>`;
+                    } else {
+                        const calc = calculateGradeValues('ratio', reading.gradeValue);
+                        converterHtml = `<div class="converter-text">≈ ${calc.percent.toFixed(3)}% | Rise: ${calc.risePerMeter.toFixed(4)} m/m</div>`;
+                    }
+                }
+                
+                if (hasCalculation) {
+                    resultHtml = `
+                        <div class="result-display">
+                            <div class="result-label">Chainage IL Result</div>
+                            <div class="result-value">${reading.results.ilAtChainage.toFixed(3)}m</div>
+                            <div class="result-detail">IL at CH ${reading.targetChainage.toFixed(2)}: ${reading.results.ilAtChainage.toFixed(3)}m</div>
+                            <div class="result-detail">Rise: ${reading.results.totalRise.toFixed(3)}m (${reading.results.risePerMetre.toFixed(4)}m/m)</div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="reading-card" id="chainageILReading-${reading.id}">
+                        <div class="reading-card-header" onclick="toggleReadingCard('chainageILReading-${reading.id}')">
+                            <div class="reading-number">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Calculation ${index + 1}
+                            </div>
+                            <div class="reading-controls">
+                                <button class="control-btn" onclick="event.stopPropagation(); moveChainageILReadingUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button class="control-btn" onclick="event.stopPropagation(); moveChainageILReadingDown(${index})" ${index === appState.chainageIL.readings.length - 1 ? 'disabled' : ''} title="Move Down">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                                <button class="control-btn delete-btn" onclick="event.stopPropagation(); deleteChainageILReading(${reading.id})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="reading-card-content">
+                            <div style="padding: 18px;">
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marker-alt label-icon"></i>Section ID (Optional)</label>
+                                    <input 
+                                        type="text" 
+                                        value="${reading.sectionId}" 
+                                        placeholder="e.g., MH05 to MH06"
+                                        onchange="updateChainageILReading(${index}, 'sectionId', this.value)"
+                                    >
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-arrow-down label-icon"></i>Start IL (m)</label>
+                                        <input 
+                                            type="number" 
+                                            value="${reading.startIL !== null ? reading.startIL : ''}" 
+                                            placeholder="e.g., 179.250"
+                                            step="0.001"
+                                            onchange="updateChainageILReading(${index}, 'startIL', this.value)"
+                                        >
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-ruler-horizontal label-icon"></i>Chainage (m)</label>
+                                        <input 
+                                            type="number" 
+                                            value="${reading.targetChainage !== null ? reading.targetChainage : ''}" 
+                                            placeholder="e.g., 20.00"
+                                            step="0.01"
+                                            onchange="updateChainageILReading(${index}, 'targetChainage', this.value)"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="radio-toggle">
+                                    <div class="radio-option">
+                                        <input type="radio" id="chainagePercent-${reading.id}" name="chainageMode-${reading.id}" value="percent" ${reading.gradeMode === 'percent' ? 'checked' : ''}>
+                                        <label for="chainagePercent-${reading.id}">Percentage (%)</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="chainageRatio-${reading.id}" name="chainageMode-${reading.id}" value="ratio" ${reading.gradeMode === 'ratio' ? 'checked' : ''}>
+                                        <label for="chainageRatio-${reading.id}">Ratio (1 in X)</label>
+                                    </div>
+                                </div>
+
+                                ${reading.gradeMode === 'percent' ? `
+                                <div class="form-group">
+                                    <label><i class="fas fa-percentage label-icon"></i>Grade (%)</label>
+                                    <input 
+                                        type="number" 
+                                        value="${reading.gradeValue !== null ? reading.gradeValue : ''}" 
+                                        placeholder="e.g., 1.111"
+                                        step="0.001"
+                                        onchange="updateChainageILReading(${index}, 'gradeValue', this.value)"
+                                    >
+                                    ${converterHtml}
+                                </div>
+                                ` : `
+                                <div class="form-group">
+                                    <label><i class="fas fa-divide label-icon"></i>Grade (1 in X)</label>
+                                    <input 
+                                        type="number" 
+                                        value="${reading.gradeValue !== null ? reading.gradeValue : ''}" 
+                                        placeholder="e.g., 90"
+                                        step="0.001"
+                                        onchange="updateChainageILReading(${index}, 'gradeValue', this.value)"
+                                    >
+                                    ${converterHtml}
+                                </div>
+                                `}
+                                
+                                ${resultHtml}
+                                
+                                <div class="formula-display">
+                                    <div class="formula-title">Calculation Steps:</div>
+                                    <div class="formula-step">1. Rise per metre = Grade % ÷ 100 OR 1 ÷ Ratio</div>
+                                    <div class="formula-step">2. Total Rise = Rise per metre × Distance</div>
+                                    <div class="formula-step">3. IL at Chainage = Start IL + Total Rise</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label><i class="fas fa-sticky-note label-icon"></i>Notes (Optional)</label>
+                                    <textarea 
+                                        placeholder="e.g., Calculation notes..."
+                                        onchange="updateChainageILReading(${index}, 'notes', this.value)">${reading.notes}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add event listeners for radio buttons
+            appState.chainageIL.readings.forEach((reading, index) => {
+                const percentRadio = document.getElementById(`chainagePercent-${reading.id}`);
+                const ratioRadio = document.getElementById(`chainageRatio-${reading.id}`);
+                
+                if (percentRadio) {
+                    percentRadio.addEventListener('change', () => {
+                        if (percentRadio.checked) {
+                            toggleChainageILGradeMode(index, 'percent');
+                        }
+                    });
+                }
+                
+                if (ratioRadio) {
+                    ratioRadio.addEventListener('change', () => {
+                        if (ratioRadio.checked) {
+                            toggleChainageILGradeMode(index, 'ratio');
+                        }
+                    });
+                }
+            });
+        }
+
+        // =============================================
+        // GENERAL NOTES TOOL
+        // =============================================
+
+        function addGeneralNote() {
+            appState.generalNotes.noteCounter++;
+            const note = {
+                id: appState.generalNotes.noteCounter,
+                content: ''
+            };
+            
+            appState.generalNotes.notes.push(note);
+            renderGeneralNotes();
+            updateUnifiedPreview();
+            showNotification('Note added');
+        }
+
+        function deleteGeneralNote(id) {
+            if (appState.generalNotes.notes.length === 1) {
+                showNotification('Must keep at least one note', 'error');
+                return;
+            }
+            
+            appState.generalNotes.notes = appState.generalNotes.notes.filter(n => n.id !== id);
+            renderGeneralNotes();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Note deleted');
+        }
+
+        function moveGeneralNoteUp(index) {
+            if (index === 0) return;
+            [appState.generalNotes.notes[index - 1], appState.generalNotes.notes[index]] = 
+            [appState.generalNotes.notes[index], appState.generalNotes.notes[index - 1]];
+            renderGeneralNotes();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Note moved up');
+        }
+
+        function moveGeneralNoteDown(index) {
+            if (index === appState.generalNotes.notes.length - 1) return;
+            [appState.generalNotes.notes[index], appState.generalNotes.notes[index + 1]] = 
+            [appState.generalNotes.notes[index + 1], appState.generalNotes.notes[index]];
+            renderGeneralNotes();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+            showNotification('Note moved down');
+        }
+
+        function updateGeneralNote(index, content) {
+            const note = appState.generalNotes.notes[index];
+            if (!note) return;
+            
+            note.content = content.trim();
+            renderGeneralNotes();
+            appState.manualPreviewEdit = false;
+            updateUnifiedPreview();
+        }
+
+        function renderGeneralNotes() {
+            const container = document.getElementById('generalNotesContainer');
+            
+            if (appState.generalNotes.notes.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-sticky-note"></i><p>No notes yet</p><p class="small">Click "Add Note" to begin</p></div>';
+                return;
+            }
+            
+            container.innerHTML = appState.generalNotes.notes.map((note, index) => {
+                const hasContent = note.content && note.content.trim() !== '';
+                
+                return `
+                    <div class="reading-card" id="generalNote-${note.id}">
+                        <div class="reading-card-header" onclick="toggleReadingCard('generalNote-${note.id}')">
+                            <div class="reading-number">
+                                <i class="fas fa-sticky-note"></i>
+                                Note ${index + 1}${hasContent ? ' • ' + (note.content.length > 20 ? note.content.substring(0, 20) + '...' : note.content) : ''}
+                            </div>
+                            <div class="reading-controls">
+                                <button class="control-btn" onclick="event.stopPropagation(); moveGeneralNoteUp(${index})" ${index === 0 ? 'disabled' : ''} title="Move Up">
+                                    <i class="fas fa-arrow-up"></i>
+                                </button>
+                                <button class="control-btn" onclick="event.stopPropagation(); moveGeneralNoteDown(${index})" ${index === appState.generalNotes.notes.length - 1 ? 'disabled' : ''} title="Move Down">
+                                    <i class="fas fa-arrow-down"></i>
+                                </button>
+                                <button class="control-btn delete-btn" onclick="event.stopPropagation(); deleteGeneralNote(${note.id})" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="reading-card-content">
+                            <div style="padding: 18px;">
+                                <div class="form-group">
+                                    <label><i class="fas fa-edit label-icon"></i>Note Content</label>
+                                    <textarea 
+                                        placeholder="Enter your note here..."
+                                        oninput="updateGeneralNote(${index}, this.value)"
+                                        rows="4"
+                                        style="min-height: 120px;"
+                                    >${note.content || ''}</textarea>
+                                </div>
+                                
+                                ${hasContent ? `
+                                    <div class="result-display">
+                                        <div class="result-label">Preview</div>
+                                        <div class="result-detail">${note.content.replace(/\n/g, '<br>')}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+
+        function initializeEventListeners() {
+            // Theme toggle
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    switchTab(e.target.closest('.tab-btn').dataset.tab);
+                });
+            });
+            
+            // Project info sync
+            document.getElementById('unifiedProjectName').addEventListener('input', updateUnifiedPreview);
+            document.getElementById('unifiedStage').addEventListener('input', updateUnifiedPreview);
+            
+            // Tool buttons
+            document.getElementById('addPipeLevelCheckReadingBtn').addEventListener('click', addPipeLevelCheckReading);
+            document.getElementById('addLaserReadingBtn').addEventListener('click', addLaserReading);
+            document.getElementById('addRegradeReadingBtn').addEventListener('click', addRegradeReading);
+            document.getElementById('addChainageILReadingBtn').addEventListener('click', addChainageILReading);
+            document.getElementById('addGeneralNoteBtn').addEventListener('click', addGeneralNote);
+        }
+
+        function initializeApp() {
+            // Load saved theme
+            loadTheme();
+            
+            // Initialize event listeners
+            initializeEventListeners();
+            
+            // Initialize each tool with one reading
+            addPipeLevelCheckReading();
+            addLaserReading();
+            addRegradeReading();
+            addGradeCheckReading();
+            addChainageILReading();
+            addGeneralNote();
+            
+            // Update unified preview
+            updateUnifiedPreview();
+            
+            console.log('Field Tools - Unified Application Ready! 🎯');
+        }
+
+        // Start the app
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
