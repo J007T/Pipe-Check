@@ -1385,7 +1385,7 @@
                     <div class="section-inner">
                         <div id="gradeCheckReadingsContainer"></div>
 
-                        <button class="btn btn-secondary" onclick="addGradeCheckReading()">
+                        <button class="btn btn-secondary" id="addGradeCheckReadingBtn">
                             <i class="fas fa-plus-circle"></i>
                             Add Verification Section
                         </button>
@@ -3034,13 +3034,6 @@
         // GRADE CHECK TOOL
         // =============================================
 
-        function getGradeCheckInputValue(id) {
-            const input = document.getElementById(id);
-            if (!input) return null;
-            const value = parseFloat(input.value);
-            return isNaN(value) ? null : value;
-        }
-
         function addGradeCheckReading() {
             appState.gradeCheck.readingCounter++;
             const readingId = appState.gradeCheck.readingCounter;
@@ -3178,6 +3171,13 @@
             
             appState.manualPreviewEdit = false;
             updateUnifiedPreview();
+        }
+
+        function getGradeCheckInputValue(id) {
+            const input = document.getElementById(id);
+            if (!input) return null;
+            const value = parseFloat(input.value);
+            return isNaN(value) ? null : value;
         }
 
         function toggleGradeCheckGradeMode(id, mode) {
@@ -3729,6 +3729,7 @@
             document.getElementById('addPipeLevelCheckReadingBtn').addEventListener('click', addPipeLevelCheckReading);
             document.getElementById('addLaserReadingBtn').addEventListener('click', addLaserReading);
             document.getElementById('addRegradeReadingBtn').addEventListener('click', addRegradeReading);
+            document.getElementById('addGradeCheckReadingBtn').addEventListener('click', addGradeCheckReading);
             document.getElementById('addChainageILReadingBtn').addEventListener('click', addChainageILReading);
             document.getElementById('addGeneralNoteBtn').addEventListener('click', addGeneralNote);
         }
